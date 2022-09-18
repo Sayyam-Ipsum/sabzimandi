@@ -166,7 +166,6 @@
             totalAmount = 0;
 
             $("tr.tableRow").each(function (){
-                console.log('test');
                 console.log(parseInt($(this).find("td.proTotal").find("input[name='qty']").val()));
                 totalAmount = totalAmount + parseInt($(this).find("td.proTotal").find("input[name='qty']").val());
             });
