@@ -1,0 +1,125 @@
+label.error {
+    font-size: 13px !important;
+    color: #F00;
+    font-weight: normal !important;
+    margin: 0 !important;
+    display: none;
+}
+
+.field {
+    margin-top: 15px;
+}
+
+.required:after{
+    content:"*"!important;
+    color: red!important;
+}
+
+.customPrimary{
+    background:#4287f5;
+}
+.btn:focus{
+    box-shadow: none;
+}
+.btn-close:focus{
+    box-shadow: none;
+}
+.form-control:focus{
+    box-shadow: none;
+}
+
+.form-select:focus{
+    box-shadow: none;
+}
+
+a.paginate_button {
+    display: inline-block;
+    color: #0ba6ff !important;
+    background-color: #ffffff !important;
+    border: 1px solid lightgrey !important;
+    padding: 2px 6px;
+    margin-left: 2px;
+    text-align: center;
+    cursor: pointer;
+    *cursor: hand;
+}
+
+.page-item {
+    background-color: lightgrey !important;
+    border: 1px solid black;
+}
+
+.page-link {
+    color: black !important;
+}
+
+a.paginate_button.active {
+    background-color: #24a0ed !important;
+    color: #ffffff !important;
+}
+
+a.paginate_active {
+    background-color: blue !important;
+    border: 1px solid black;
+}
+
+a.paginate_button_disabled {
+    color: #3d6672;
+    background-color: red !important;
+}
+
+.paging_full_numbers a:active {
+    outline: none
+}
+
+.paging_full_numbers a:hover {
+    text-decoration: none;
+    background-color: green !important;
+    color: #24a0ed;
+}
+
+div.dataTables_paginate span > a {
+    text-align: center;
+}
+
+div.dataTables_info {
+    padding: 9px 6px 6px 6px;
+}
+.dz-image img {
+    width: 100%;
+    height: 100%;
+}
+.dropzone.dz-started .dz-message {
+    display: block !important;
+}
+.dropzone {
+    border: 2px dashed #028AF4 !important;;
+}
+.dropzone .dz-preview.dz-complete .dz-success-mark {
+    opacity: 1;
+}
+.dropzone .dz-preview.dz-error .dz-success-mark {
+    opacity: 0;
+}
+.dropzone .dz-preview .dz-error-message{
+    top: 144px;
+}
+
+.dimmer {
+    display: none !important;
+    background: #000;
+    opacity: 0.75;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99999;
+}
+.spinner-border{
+    width: 5rem;
+    height: 5rem;
+    margin-top: 50vh;
+    color: #5cb85c;
+
+}
