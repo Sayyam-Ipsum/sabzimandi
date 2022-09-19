@@ -106,9 +106,9 @@ div.dataTables_info {
 }
 
 .dimmer {
-    display: none !important;
+    display: none;
     background: #000;
-    opacity: 0.75;
+    opacity: 0.6;
     position: fixed;
     top: 0;
     left: 0;
@@ -117,8 +117,8 @@ div.dataTables_info {
     z-index: 99999;
 }
 .spinner-border{
-    width: 5rem;
-    height: 5rem;
+    width: 2rem;
+    height: 2rem;
     margin-top: 50vh;
     color: #5cb85c;
 

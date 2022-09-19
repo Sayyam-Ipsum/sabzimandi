@@ -78,11 +78,12 @@ Route::group(['middleware' => 'auth'], function (){
 
     Route::prefix('pos')->group(function (){
         Route::get('/', [SaleController::class, 'pos']);
-        Route::get('/create', [SaleController::class, 'create']);
-        Route::get('/edit/{id}', [SaleController::class, 'create']);
-        Route::post('/store', [SaleController::class, 'store']);
-        Route::post('/store/{id}', [SaleController::class, 'store']);
-        Route::get('/status/{id}', [SaleController::class, 'status']);
+        Route::post('/', [SaleController::class, 'sell']);
+    });
+
+    Route::prefix('sales')->group(function (){
+        Route::get('/today', [SaleController::class, 'todaySales']);
+        Route::get('/{id}', [SaleController::class, 'show']);
     });
 });
 

@@ -49,25 +49,7 @@
     {{--        type="text/css"--}}
     {{--    />--}}
     <style>
-        .dimmer {
-            display: none;
-            background: #000;
-            opacity: 0.75;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 99999;
-        }
 
-        .spinner-border {
-            width: 5rem;
-            height: 5rem;
-            margin-top: 50vh;
-            color: #5cb85c;
-
-        }
     </style>
     @yield('styles')
 </head>
@@ -79,9 +61,9 @@
              role="status">
             <span class="sr-only">Loading...</span>
         </div>
-        <div class="mt-3 " style=" color: #ffffff;">
-            <h4> Loading... </h4>
-        </div>
+        {{--        <div class="mt-3 " style=" color: #ffffff;">--}}
+        {{--            <h4> Loading... </h4>--}}
+        {{--        </div>--}}
     </div>
 </div>
 <!-- dimmer ends -->
@@ -217,47 +199,67 @@
                         </li>
                     @endcan
 
-                        <li class="nav-item">
-                            <a href="{{url('pos')}}" class="nav-link">
-                                <i class="nav-icon fa fa-balance-scale"></i>
-                                <p>
-                                    POS
-                                </p>
-                            </a>
-                        </li>
+                    <li class="nav-item">
+                        <a href="{{url('pos')}}" class="nav-link">
+                            <i class="nav-icon fa fa-balance-scale"></i>
+                            <p>
+                                POS
+                            </p>
+                        </a>
+                    </li>
 
-                        <li class="nav-item">
-                            <a href="javascript:void(0);" class="nav-link bg-success text-white">
-                                <i class="nav-icon fas fa-user"></i>
-                                <p>
-                                    Admin
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                @can('PageAccess.Users')
-                                    <li class="nav-item">
-                                        <a href="{{url('users')}}" class="nav-link">
-                                            <i class="nav-icon fas fa-angle-right"></i>
-                                            <p>
-                                                User Management
-                                            </p>
-                                        </a>
-                                    </li>
-                                @endcan
+                    <li class="nav-item">
+                        <a href="javascript:void(0);" class="nav-link bg-success text-white">
+                            <i class="nav-icon fas fa-money-bill"></i>
+                            <p>
+                                Sale
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{url('sales/today')}}" class="nav-link">
+                                    <i class="nav-icon fas fa-angle-right"></i>
+                                    <p>
+                                        Today's Sale
+                                    </p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
 
-                                @can('PageAccess.Roles')
-                                    <li class="nav-item">
-                                        <a href="{{url('roles')}}" class="nav-link">
-                                            <i class="nav-icon fas fa-angle-right"></i>
-                                            <p>
-                                                Role Management
-                                            </p>
-                                        </a>
-                                    </li>
-                                @endcan
-                            </ul>
-                        </li>
+                    <li class="nav-item">
+                        <a href="javascript:void(0);" class="nav-link bg-success text-white">
+                            <i class="nav-icon fas fa-user"></i>
+                            <p>
+                                Admin
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            @can('PageAccess.Users')
+                                <li class="nav-item">
+                                    <a href="{{url('users')}}" class="nav-link">
+                                        <i class="nav-icon fas fa-angle-right"></i>
+                                        <p>
+                                            User Management
+                                        </p>
+                                    </a>
+                                </li>
+                            @endcan
+
+                            @can('PageAccess.Roles')
+                                <li class="nav-item">
+                                    <a href="{{url('roles')}}" class="nav-link">
+                                        <i class="nav-icon fas fa-angle-right"></i>
+                                        <p>
+                                            Role Management
+                                        </p>
+                                    </a>
+                                </li>
+                            @endcan
+                        </ul>
+                    </li>
 
                     <li class="nav-item">
                         <a href="{{url('logout')}}" class="nav-link bg-dark text-white">
@@ -411,6 +413,14 @@
             timer: 1500,
             timerProgressBar: true,
         });
+    }
+
+    function blockUI() {
+        $(".dimmer").show();
+    }
+
+    function unblockUI() {
+        $(".dimmer").hide();
     }
 
     function open_modal(url) {
