@@ -82,8 +82,10 @@ Route::group(['middleware' => 'auth'], function (){
     });
 
     Route::prefix('sales')->group(function (){
+        Route::get('/', [SaleController::class, 'list']);
         Route::get('/today', [SaleController::class, 'todaySales']);
         Route::get('/{id}', [SaleController::class, 'show']);
+        Route::get('/{customer?}', [SaleController::class, 'customerSales']);
     });
 });
 

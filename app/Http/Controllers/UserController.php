@@ -104,7 +104,8 @@ class UserController extends Controller
                     if ($customers->deleted_at == null) {
                         $action .= '<button class="btn btn-sm btn-edit btn-secondary mr-1" data-id="' . $customers->id . '">
                             <i class="fa fa-pencil-alt"></i></button>';
-                        $action .= '<a class="btn btn-sm btn-status btn-danger" data-id="' . $customers->id . '"><i class="fas fa-user-lock"></i></a>';
+                        $action .= '<a class="btn btn-sm btn-status btn-danger mr-1" data-id="' . $customers->id . '"><i class="fas fa-user-lock"></i></a>';
+                        $action .= '<a class="btn btn-sm btn-sales btn-info" data-id="' . $customers->id . '"><i class="fas fa-arrows-alt mr-1"></i>Sales</a>';
                     } else {
                         $action .= '<a class="btn btn-sm btn-status btn-success" data-id="' . $customers->id . '"><i class="fas fa-lock-open"></i></a>';
                     }

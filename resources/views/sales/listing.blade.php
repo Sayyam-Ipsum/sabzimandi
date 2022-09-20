@@ -1,11 +1,11 @@
 @extends('templates.index')
 
 @section('page-title')
-    Today Sale
+    Sales
 @stop
 
 @section('title')
-    today sale
+    sales
 @stop
 
 @section('page-actions')
@@ -16,7 +16,7 @@
         <table id="data-table" class="table table-sm table-bordered">
             <thead>
             <tr>
-                <th>Sr.</th>
+                <th>Date</th>
                 <th>Customer</th>
                 <th>Phone</th>
                 <th>Total</th>
@@ -40,12 +40,12 @@
                     orderable: true
                 }],
                 ajax: {
-                    url: "/sales/today",
+                    url: "/sales",
                 },
                 columns: [
                     {
-                        data: 'id',
-                        name: 'id',
+                        data: 'date',
+                        name: 'date',
                     },
                     {
                         data: 'customer',
@@ -73,5 +73,6 @@
             var id = $(this).data('id');
             open_modal('/sales/' + id);
         });
+
     </script>
 @stop

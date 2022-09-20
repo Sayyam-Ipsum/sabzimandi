@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-end">
-    <span>Date: {{show_date(@$sale->created_at)}}</span>
+    <span>Date: {{showDateTime(@$sale->created_at)}}</span>
 </div>
 <div>
     <table class="table table-sm">

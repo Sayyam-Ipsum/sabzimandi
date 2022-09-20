@@ -45,8 +45,18 @@ class SaleRepository implements SaleInterface
         return Invoice::whereDate('created_at', Carbon::today())->get();
     }
 
-    public function saleDetails($id)
+    public function listing($id = null)
     {
-        return Invoice::find($id);
+        if ($id) {
+            return Invoice::find($id);
+        }
+
+        return Invoice::all();
+
+    }
+
+    public function customerSales($id)
+    {
+        return Invoice::where('user_id_fk', $id)->orderBy('created_at', 'desc')->get();
     }
 }

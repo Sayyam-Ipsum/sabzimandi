@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Mail;
 use App\Models\Role;
+use Illuminate\Support\Carbon;
 
 function send_email($to, $subject, $data, $blade){
     try {
@@ -16,9 +17,14 @@ function send_email($to, $subject, $data, $blade){
     return true;
 }
 
-function show_date($d)
+function showDate($d)
 {
     return date('d-M-Y', strtotime($d));
+}
+
+function showDateTime($d)
+{
+    return Carbon::parse($d)->format('d-M-Y g:i A');
 }
 
 function customerRoleId()

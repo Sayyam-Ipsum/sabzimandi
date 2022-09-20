@@ -57,6 +57,39 @@ class SaleController extends Controller
         return response()->json($res);
     }
 
+    public function list(Request $request)
+    {
+        if ($request->ajax()) {
+            $sales = $this->saleInterface->listing();
+            return DataTables::of($sales)
+                ->addColumn('date', function ($sale) {
+                    return showDateTime(@$sale->created_at);
+                })
+                ->addColumn('customer', function ($sale) {
+                    return @$sale->customer->name;
+                })
+                ->addColumn('phone', function ($sale) {
+                    return @$sale->customer->phone ? @$sale->user->phone : 'N/A';
+                })
+                ->addColumn('total', function ($sale) {
+                    return 'Rs. '.@$sale->total;
+                })
+                ->addColumn('actions', function ($sale) {
+                    $action = '';
+                    if (@$sale->deleted_at == null) {
+                        $action .= '<button class="btn btn-sm btn-view btn-info mr-1" data-id="' . @$sale->id . '">
+                            <i class="fa fa-eye"></i></button>';
+                    }
+
+                    return $action;
+                })
+                ->rawColumns(['actions'])
+                ->make(true);
+        }
+
+        return view('sales.listing');
+    }
+
     public function todaySales(Request $request)
     {
         if ($request->ajax()) {
@@ -92,10 +125,22 @@ class SaleController extends Controller
 
     public function show($id)
     {
-        $sale = $this->saleInterface->saleDetails($id);
+        $sale = $this->saleInterface->listing($id);
         $res['title'] = 'Sale Details';
         $res['html'] = view('sales.view', compact(['sale']))->render();
 
         return response()->json($res);
+    }
+
+    public function customerSales(Request $request)
+    {
+        if ($request->get('customer')) {
+            $id = $request->get('customer');
+            $sales = $this->saleInterface->customerSales($id);
+            $res['title'] = 'Customer Sales';
+            $res['html'] = view('sales.customer-sales', compact(['sales']))->render();
+
+            return response()->json($res);
+        }
     }
 }

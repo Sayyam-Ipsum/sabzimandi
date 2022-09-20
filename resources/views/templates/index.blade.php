@@ -218,6 +218,14 @@
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
+                                <a href="{{url('sales')}}" class="nav-link">
+                                    <i class="nav-icon fas fa-angle-right"></i>
+                                    <p>
+                                        Listing
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="{{url('sales/today')}}" class="nav-link">
                                     <i class="nav-icon fas fa-angle-right"></i>
                                     <p>
