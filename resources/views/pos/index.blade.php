@@ -84,7 +84,7 @@
                 row += `<td class="proId d-none">${product.id}</td>`;
                 row += `<td class="proName">${product.name}</td>`;
                 // row += `<td class="">${product.unit ? product.unit : 'N/A'}</td>`;
-                row += `<td class="proQty"><input type="number" onkeyup="quantityChange(this)" class="form-control form-control-sm" name="qty" placeholder="${product.unit}" id="quantity"></td>`;
+                row += `<td class="proQty"><input type="number" onkeyup="quantityChange(this)" class="form-control form-control-sm" name="qty" placeholder="${product.unit.name}" id="quantity"></td>`;
                 row += `<td class="proTotal"><input type="number" onkeyup="totalChange(this)" class="form-control form-control-sm" name="total" placeholder="total" id="total"></td>`;
                 row += `<td class="proCancel"><button onclick="deleteProduct(this)" class="btn"><i class="fa fa-times"></i></button></td>`;
                 row += `</tr>`;
@@ -96,6 +96,7 @@
                         // console.log('hello');
                         // $(this).find("td.proQty").find("input[name='qty']").val(parseInt($(this).find("td.proQty").find("input[name='qty']").val()) + 1);
                         productCheck = false;
+                        console.log('false');
                     }
                 });
 
@@ -105,7 +106,7 @@
                     row += `<td class="proId d-none">${product.id}</td>`;
                     row += `<td class="proName">${product.name}</td>`;
                     // row += `<td class="">${product.unit ? product.unit : 'N/A'}</td>`;
-                    row += `<td class="proQty"><input type="number" onkeyup="quantityChange(this)" class="form-control form-control-sm" name="qty" placeholder="${product.unit}" id="quantity"></td>`;
+                    row += `<td class="proQty"><input type="number" onkeyup="quantityChange(this)" class="form-control form-control-sm" name="qty" placeholder="${product.unit.name}" id="quantity"></td>`;
                     row += `<td class="proTotal"><input type="number" onkeyup="totalChange(this)" class="form-control form-control-sm" name="total" placeholder="total" id="total"></td>`;
                     row += `<td class="proCancel"><button  onclick="deleteProduct(this)" class="btn"><i class="fa fa-times"></i></button></td>`;
                     row += `</tr>`;

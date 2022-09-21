@@ -2,36 +2,37 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\ProductInterface;
-use App\Models\Product;
+use App\Interfaces\UnitInterface;
+use App\Models\Unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
-class ProductRepository implements ProductInterface
+class UnitRepository implements UnitInterface
 {
     public function listing($id = null)
     {
         if ($id) {
-            return Product::find($id);
+            return Unit::find($id);
         }
 
-        return Product::withTrashed()
+        return Unit::withTrashed()
             ->get();
     }
 
-    public function activeProducts()
+    public function activeUnits()
     {
-        return Product::with('unit')->whereNull('deleted_at')->get();
+        return Unit::whereNull('deleted_at')->get();
     }
 
     public function store(Request $request, $id = null)
     {
         try {
             DB::beginTransaction();
-            $product = $id ? Product::find($id) : new Product();
-            $product->name = $request->name;
-            $product->unit_id_fk = $request->unit;
-            $product->save();
+            $unit = $id ? Unit::find($id) : new Unit();
+            $unit->name = $request->name;
+            $unit->slug = Str::slug($request->name);
+            $unit->save();
             DB::commit();
             return true;
         } catch (\Exception $e) {
@@ -42,16 +43,16 @@ class ProductRepository implements ProductInterface
 
     public function status($id)
     {
-        $product = Product::where('id', $id)
+        $unit = Unit::where('id', $id)
             ->withTrashed()
             ->first();
-        if ($product) {
-            if ($product->deleted_at == null) {
-                $product->destroy($id);
+        if ($unit) {
+            if ($unit->deleted_at == null) {
+                $unit->destroy($id);
                 return true;
             } else {
-                $product->deleted_at = null;
-                $product->save();
+                $unit->deleted_at = null;
+                $unit->save();
                 return true;
             }
         } else {

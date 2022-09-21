@@ -29,6 +29,7 @@ class SaleController extends Controller
     {
         $customers = $this->userInterface->activeCustomer();
         $products = $this->productInterface->activeProducts();
+//        return $products;
         return view('pos.index', compact(['customers', 'products']));
     }
 
@@ -132,15 +133,12 @@ class SaleController extends Controller
         return response()->json($res);
     }
 
-    public function customerSales(Request $request)
+    public function customerSales($customerID)
     {
-        if ($request->get('customer')) {
-            $id = $request->get('customer');
-            $sales = $this->saleInterface->customerSales($id);
-            $res['title'] = 'Customer Sales';
-            $res['html'] = view('sales.customer-sales', compact(['sales']))->render();
+        $sales = $this->saleInterface->customerSales($customerID);
+        $res['title'] = 'Customer Sales';
+        $res['html'] = view('sales.customer-sales', compact(['sales']))->render();
 
-            return response()->json($res);
-        }
+        return response()->json($res);
     }
 }

@@ -199,6 +199,17 @@
                         </li>
                     @endcan
 
+                    @can('PageAccess.Units')
+                        <li class="nav-item">
+                            <a href="{{url('units')}}" class="nav-link">
+                                <i class="nav-icon fa fa-box"></i>
+                                <p>
+                                    Units
+                                </p>
+                            </a>
+                        </li>
+                    @endcan
+
                     <li class="nav-item">
                         <a href="{{url('pos')}}" class="nav-link">
                             <i class="nav-icon fa fa-balance-scale"></i>

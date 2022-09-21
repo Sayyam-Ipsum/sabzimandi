@@ -1,15 +1,15 @@
 @extends('templates.index')
 
 @section('page-title')
-    Customers
+    Units
 @stop
 
 @section('title')
-    customers
+    units
 @stop
 
 @section('page-actions')
-    @include('partials.add-button', ['class_name' => 'btn-add', 'text' => 'new customer'])
+    @include('partials.add-button', ['class_name' => 'btn-add', 'text' => 'new unit'])
 @stop
 
 @section('content')
@@ -18,9 +18,6 @@
             <thead>
             <tr>
                 <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Address</th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -41,24 +38,12 @@
                     orderable: true
                 }],
                 ajax: {
-                    url: "/customers",
+                    url: "/units",
                 },
                 columns: [
                     {
                         data: 'name',
                         name: 'name',
-                    },
-                    {
-                        data: 'email',
-                        name: 'email',
-                    },
-                    {
-                        data: 'phone',
-                        name: 'phone',
-                    },
-                    {
-                        data: 'address',
-                        name: 'address',
                     },
                     {
                         data: 'actions',
@@ -69,21 +54,15 @@
             });
         });
 
-        // Sales
-        $("#data-table").on('click', '.btn-sales', function() {
-            var id = $(this).data('id');
-            open_modal('/sales/customer/' + id);
-        });
-
         //-- Edit
         $("#data-table").on('click', '.btn-edit', function() {
             var id = $(this).data('id');
-            open_modal('/users/edit/' + id + '?customer=1');
+            open_modal('/units/edit/' + id);
         });
 
         // Create
         $(".btn-add").click(function() {
-            open_modal('{{url('users/create?customer=1')}}');
+            open_modal('{{url('units/create')}}');
         });
 
         // Status
@@ -102,7 +81,7 @@
             }).then((result) => {
                 if (!result.value) return;
                 $.ajax({
-                    url: "{{url('users/status')}}/" + id,
+                    url: "{{url('units/status')}}/" + id,
                     type: "GET",
                     dataType: "json",
                     cache: false,

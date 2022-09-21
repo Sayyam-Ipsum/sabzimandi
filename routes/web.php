@@ -7,6 +7,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SaleController;
+use App\Http\Controllers\UnitController;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,6 +77,17 @@ Route::group(['middleware' => 'auth'], function (){
         });
     });
 
+    Route::group(['middleware' => 'can:PageAccess.Units'], function (){
+        Route::prefix('units')->group(function (){
+            Route::get('/', [UnitController::class, 'index']);
+            Route::get('/create', [UnitController::class, 'create']);
+            Route::get('/edit/{id}', [UnitController::class, 'create']);
+            Route::post('/store', [UnitController::class, 'store']);
+            Route::post('/store/{id}', [UnitController::class, 'store']);
+            Route::get('/status/{id}', [UnitController::class, 'status']);
+        });
+    });
+
     Route::prefix('pos')->group(function (){
         Route::get('/', [SaleController::class, 'pos']);
         Route::post('/', [SaleController::class, 'sell']);
@@ -85,7 +97,7 @@ Route::group(['middleware' => 'auth'], function (){
         Route::get('/', [SaleController::class, 'list']);
         Route::get('/today', [SaleController::class, 'todaySales']);
         Route::get('/{id}', [SaleController::class, 'show']);
-        Route::get('/{customer?}', [SaleController::class, 'customerSales']);
+        Route::get('/customer/{customerID}', [SaleController::class, 'customerSales']);
     });
 });
 

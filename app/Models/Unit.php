@@ -7,9 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Product extends Model
+class Unit extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory , SoftDeletes;
+
+    protected $table = 'units';
 
     protected $guarded = [];
 
@@ -19,10 +21,5 @@ class Product extends Model
             get: fn($value) => ucwords($value),
             set: fn($value) => strtolower($value)
         );
-    }
-
-    public function unit()
-    {
-        return $this->belongsTo(Unit::class, 'unit_id_fk');
     }
 }
