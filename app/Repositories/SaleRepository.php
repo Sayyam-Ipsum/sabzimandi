@@ -42,7 +42,7 @@ class SaleRepository implements SaleInterface
 
     public function todaySale()
     {
-        return Invoice::whereDate('created_at', Carbon::today())->get();
+        return Invoice::whereDate('created_at', Carbon::today())->orderBy('id', 'desc')->get();
     }
 
     public function listing($id = null)
@@ -51,7 +51,7 @@ class SaleRepository implements SaleInterface
             return Invoice::find($id);
         }
 
-        return Invoice::all();
+        return Invoice::orderBy('created_at', 'desc')->get();
 
     }
 

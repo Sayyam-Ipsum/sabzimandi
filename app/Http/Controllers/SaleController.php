@@ -63,7 +63,7 @@ class SaleController extends Controller
             $sales = $this->saleInterface->listing();
             return DataTables::of($sales)
                 ->addColumn('date', function ($sale) {
-                    return showDateTime(@$sale->created_at);
+                    return@$sale->created_at;
                 })
                 ->addColumn('customer', function ($sale) {
                     return @$sale->customer->name;

@@ -372,7 +372,8 @@
 <script src="{{asset('assets/plugins/summernote/summernote-bs4.min.js')}}"></script>
 <!-- overlayScrollbars -->
 <script src="{{asset('assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
-
+<!-- Moment JS -->
+<script src="{{asset('assets/plugins/moment/moment.min.js')}}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{asset('assets/dist/js/demo.js')}}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
@@ -384,6 +385,8 @@
 <script src="{{asset('assets/plugins/select2/js/select2.full.min.js')}}"></script>
 <!-- Datatables JS -->
 <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/datetime/1.1.2/js/dataTables.dateTime.min.js"></script>
+{{--<script src="https://cdn.datatables.net/datetime/1.1.2/js/dataTables.dateTime.min.js"></script>--}}
 <!-- CHART JS -->
 <script src="{{asset('assets/highchart/highcharts.js')}}"></script>
 <script src="{{asset('assets/highchart/chart.js')}}"></script>
