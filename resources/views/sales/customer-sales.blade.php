@@ -18,7 +18,7 @@
                     </button>
                 </div>
                 <div id="my{{$key}}" class="collapse {{$key == 0 ? 'show' : 'false'}}">
-                    <div class="accordion-body p-1 m-1">
+                    <div class="accordion-body p-1 m-1 shadow-sm border">
                         <table class="table table-sm">
                             <tr class="bg-light">
                                 <th colspan="3">Products</th>
@@ -32,7 +32,7 @@
                                 @foreach(@$sale->items as $item)
                                     <tr>
                                         <td>{{$item->product ? $item->product->name : 'N/A'}}</td>
-                                        <td>{{$item->quantity}} - ({{$item->product ? $item->product->unit ? $item->product->unit : 'N/A' : 'N/A'}})</td>
+                                        <td>{{$item->quantity}} - ({{$item->product ? $item->product->unit ? $item->product->unit->name : 'N/A' : 'N/A'}})</td>
                                         <td>Rs. {{$item->amount}}</td>
                                     </tr>
                                 @endforeach

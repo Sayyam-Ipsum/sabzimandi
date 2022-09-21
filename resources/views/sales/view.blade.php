@@ -29,7 +29,7 @@
         @foreach(@$sale->items as $item)
             <tr>
                 <td>{{$item->product ? $item->product->name : 'N/A'}}</td>
-                <td>{{$item->quantity}} - ({{$item->product ? $item->product->unit ? $item->product->unit : 'N/A' : 'N/A'}})</td>
+                <td>{{$item->quantity}} - ({{$item->product ? $item->product->unit ? $item->product->unit->name : 'N/A' : 'N/A'}})</td>
                 <td>Rs. {{$item->amount}}</td>
             </tr>
         @endforeach
