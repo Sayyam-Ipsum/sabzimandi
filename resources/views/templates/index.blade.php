@@ -401,6 +401,8 @@
 <!-- CHART JS -->
 <script src="{{asset('assets/highchart/highcharts.js')}}"></script>
 <script src="{{asset('assets/highchart/chart.js')}}"></script>
+<script src="{{asset('assets/js/custom.js')}}"></script>
+
 <script>
 
     $(function () {

@@ -8,12 +8,15 @@ use Dflydev\DotAccessData\Data;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
+use App\Traits\ResponseTrait;
 
 /**
  *
  */
 class UserController extends Controller
 {
+    use ResponseTrait;
+
     /**
      * @var UserInterface
      */
@@ -130,14 +133,19 @@ class UserController extends Controller
         $roles = $this->roleInterface->activeRoles();
         if ($id) {
             $user = $this->userInterface->listing($id);
-            $res['title'] = $customer ? 'Edit Customer' : 'Edit User';
-            $res['html'] = view('users.form', compact(['user', 'roles', 'customer']))->render();
-        } else {
-            $res['title'] = $customer ? 'Create Customer' : 'Create User';;
-            $res['html'] = view('users.form', compact(['roles', 'customer']))->render();
+
+            return $this->modalResponse(
+                $customer ? 'Edit Customer' : 'Edit User',
+                'users.form',
+                ['user' => $user, 'roles' => $roles, 'customer' => $customer]
+            );
         }
 
-        return response()->json($res);
+        return $this->modalResponse(
+            $customer ? 'Create Customer' : 'Create User',
+            'users.form',
+            ['roles' => $roles, 'customer' => $customer]
+        );
     }
 
     /**
@@ -176,13 +184,9 @@ class UserController extends Controller
     {
         $is_change = $this->userInterface->status($id);
         if ($is_change) {
-            $res['success'] = 1;
-            $res['message'] = 'Status Changed';
+            return $this->jsonResponse(1, 'Status Changed');
         } else {
-            $res['success'] = 0;
-            $res['message'] = 'User Not Found!';
+            return $this->jsonResponse(0, 'User Not Found!');
         }
-
-        return response()->json($res);
     }
 }

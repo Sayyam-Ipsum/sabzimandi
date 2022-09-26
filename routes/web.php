@@ -36,6 +36,7 @@ Route::group(['middleware' => 'auth'], function (){
     Route::get('/dashboard', [AuthController::class, 'dashboard'])->middleware('can:PageAccess.Dashboard');
     Route::get('/profile', [DashboardController::class, 'profile']);
     Route::get('/setting', [DashboardController::class, 'setting']);
+    Route::post('/profile', [DashboardController::class, 'profile']);
 
     Route::group(['middleware' => 'can:PageAccess.Users'], function () {
         Route::prefix('users')->group(function (){

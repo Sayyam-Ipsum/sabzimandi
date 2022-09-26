@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Interfaces\UnitInterface;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 
 class UnitController extends Controller
 {
+    use ResponseTrait;
+
     protected $unitInterface;
 
     public function __construct(UnitInterface $unitInterface)
@@ -38,6 +41,7 @@ class UnitController extends Controller
                 ->rawColumns(['actions'])
                 ->make(true);
         }
+
         return view('units.listing');
     }
 
@@ -45,14 +49,11 @@ class UnitController extends Controller
     {
         if ($id) {
             $unit = $this->unitInterface->listing($id);
-            $res['title'] = 'Edit Unit';
-            $res['html'] = view('units.form', compact(['unit']))->render();
-        } else {
-            $res['title'] = 'Create Unit';
-            $res['html'] = view('units.form')->render();
+
+            return $this->modalResponse('Edit Unit', 'units.form', ['unit' => $unit]);
         }
 
-        return response()->json($res);
+        return $this->modalResponse('Create Unit', 'units.form');
     }
 
     public function store(Request $request, $id = null)
@@ -77,13 +78,9 @@ class UnitController extends Controller
     {
         $is_change = $this->unitInterface->status($id);
         if ($is_change) {
-            $res['success'] = 1;
-            $res['message'] = 'Status Changed';
+            return $this->jsonResponse(1, 'Status Changed');
         } else {
-            $res['success'] = 0;
-            $res['message'] = 'Unit Not Found!';
+            return $this->jsonResponse(0, 'Unit Not Found!');
         }
-
-        return response()->json($res);
     }
 }

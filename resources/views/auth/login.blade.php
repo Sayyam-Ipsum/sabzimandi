@@ -34,7 +34,7 @@
             <form action="{{url('login')}}" method="post" name="login-form" id="login-form">
                 @csrf
                 <div class="input-group">
-                    <input type="email" name="email" id="email" required class="form-control" placeholder="Email">
+                    <input type="email" name="email" id="email" required class="form-control" placeholder="Email" value="{{old('email')}}">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-envelope"></span>
@@ -44,7 +44,7 @@
                 <label id="email-error" class="error" for="email"
                        style="display: none;color: red;font-weight: normal;"></label>
                 <div class="input-group mt-3">
-                    <input type="password" required class="form-control" name="password" placeholder="Password"
+                    <input type="password" required class="form-control" name="password" placeholder="Password" value="{{old('password')}}"
                            id="password">
                     <div class="input-group-append">
                         <div class="input-group-text" onclick="myFunction()" style="cursor:pointer;">

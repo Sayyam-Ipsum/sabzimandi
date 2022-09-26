@@ -29,7 +29,6 @@ class SaleController extends Controller
     {
         $customers = $this->userInterface->activeCustomer();
         $products = $this->productInterface->activeProducts();
-//        return $products;
         return view('pos.index', compact(['customers', 'products']));
     }
 

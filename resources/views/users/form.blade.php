@@ -21,7 +21,7 @@
             <label for="phone" class="form-label">
                 <span>Phone<small>(Optional)</small></span>
             </label>
-            <input type="phone" class="form-control" id="phone" placeholder="Example: 03053609490" name="phone" value="{{@$user->phone}}">
+            <input type="phone" class="form-control" id="phone" placeholder="Example: 03053609490" max="11" name="phone" value="{{@$user->phone}}">
         </div>
 
         <div class="col-md-6 mb-3">

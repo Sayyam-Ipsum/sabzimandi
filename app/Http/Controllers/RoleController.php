@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Interfaces\RoleInterface;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
@@ -12,6 +13,8 @@ use Yajra\DataTables\DataTables;
  */
 class RoleController extends Controller
 {
+    use ResponseTrait;
+
     /**
      * @var RoleInterface
      */
@@ -53,6 +56,7 @@ class RoleController extends Controller
                 ->rawColumns(['actions'])
                 ->make(true);
         }
+
         return view('roles.listing');
     }
 
@@ -64,14 +68,11 @@ class RoleController extends Controller
     {
         if ($id) {
             $role = $this->roleInterface->listing($id);
-            $res['title'] = 'Edit Role';
-            $res['html'] = view('roles.form', compact(['role']))->render();
-        } else {
-            $res['title'] = 'Create Role';
-            $res['html'] = view('roles.form')->render();
+
+            return $this->modalResponse('Edit Role', 'roles.form', ['role' => $role]);
         }
 
-        return response()->json($res);
+        return $this->modalResponse('Create Role', 'roles.form');
     }
 
     /**
@@ -95,7 +96,6 @@ class RoleController extends Controller
         } else {
             return redirect('/roles')->withErrors($validate);
         }
-
     }
 
     /**
@@ -106,14 +106,10 @@ class RoleController extends Controller
     {
         $is_change = $this->roleInterface->status($id);
         if ($is_change) {
-            $res['success'] = 1;
-            $res['message'] = 'Status Changed';
+            return $this->jsonResponse(1, 'Status Changed');
         } else {
-            $res['success'] = 0;
-            $res['message'] = 'Role Not Found!';
+            return $this->jsonResponse(0, 'Role Not Found!');
         }
-
-        return response()->json($res);
     }
 
     /**
@@ -124,10 +120,12 @@ class RoleController extends Controller
     {
         $role = $this->roleInterface->listing($id);
         $permissions = $this->roleInterface->rolePermissionsListing($id);
-        $res['title'] = 'Permissions';
-        $res['html'] = view('roles.permissions', compact(['permissions', 'role']))->render();
 
-        return response()->json($res);
+        return $this->modalResponse(
+            'Permissions',
+            'roles.permissions',
+            ['permissions' => $permissions, 'role' => $role]
+        );
     }
 
     /**

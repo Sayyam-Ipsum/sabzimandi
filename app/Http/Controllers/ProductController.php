@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Interfaces\ProductInterface;
 use App\Interfaces\UnitInterface;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 
 class ProductController extends Controller
 {
+    use ResponseTrait;
+
     protected $productInterface;
     protected $unitInterface;
 
@@ -44,6 +47,7 @@ class ProductController extends Controller
                 ->rawColumns(['actions'])
                 ->make(true);
         }
+
         return view('products.listing');
     }
 
@@ -52,14 +56,11 @@ class ProductController extends Controller
         $units = $this->unitInterface->activeUnits();
         if ($id) {
             $product = $this->productInterface->listing($id);
-            $res['title'] = 'Edit Product';
-            $res['html'] = view('products.form', compact(['product', 'units']))->render();
-        } else {
-            $res['title'] = 'Create Product';
-            $res['html'] = view('products.form', compact(['units']))->render();
+
+            return $this->modalResponse('Edit Product', 'products.form', ['product' => $product, 'units' => $units]);
         }
 
-        return response()->json($res);
+        return $this->modalResponse('Create Product', 'products.form', ['units' => $units]);
     }
 
     public function store(Request $request, $id = null)
@@ -84,13 +85,9 @@ class ProductController extends Controller
     {
         $is_change = $this->productInterface->status($id);
         if ($is_change) {
-            $res['success'] = 1;
-            $res['message'] = 'Status Changed';
+            return $this->jsonResponse(1, 'Status Changed');
         } else {
-            $res['success'] = 0;
-            $res['message'] = 'Product Not Found!';
+            return $this->jsonResponse(0, 'Product Not Found!');
         }
-
-        return response()->json($res);
     }
 }
