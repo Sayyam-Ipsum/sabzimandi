@@ -23,16 +23,16 @@ class DashboardController extends Controller
                 'email' => 'required|email|unique:users,email' . ($request->id ? ",$request->id" : ''),
             ]);
 
-            if (!$validate->fails()) {
-                $is_store = $this->dashboardInterface->storeProfile($request);
-                if ($is_store) {
-                    return redirect('/profile')->with('success', 'Profile Updated Successfully');
-                } else {
-                    return redirect('/profile')->with('error', 'Internal Server Error');
-                }
-            } else {
+            if ($validate->fails()) {
                 return redirect('/profile')->withErrors($validate);
             }
+
+            $is_store = $this->dashboardInterface->storeProfile($request);
+            if ($is_store) {
+                return redirect('/profile')->with('success', 'Profile Updated Successfully');
+            }
+
+            return redirect('/profile')->with('error', 'Internal Server Error');
         }
 
         return view('dashboard.profile');
@@ -42,5 +42,4 @@ class DashboardController extends Controller
     {
         return view('dashboard.setting');
     }
-
 }

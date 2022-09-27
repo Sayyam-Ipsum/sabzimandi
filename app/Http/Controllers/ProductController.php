@@ -63,22 +63,22 @@ class ProductController extends Controller
         return $this->modalResponse('Create Product', 'products.form', ['units' => $units]);
     }
 
-    public function store(Request $request, $id = null)
+    public function store(Request $request, int $id = null)
     {
         $validate = Validator::make($request->all(), [
             'name' => 'required|unique:roles,name' . ($id ? ",$id" : ''),
         ]);
 
-        if (!$validate->fails()) {
-            $is_store = $this->productInterface->store($request, $id);
-            if ($is_store) {
-                return redirect('/products')->with('success', 'Operation Successful');
-            } else {
-                return redirect('/products')->with('error', 'Internal Server Error');
-            }
-        } else {
+        if ($validate->fails()) {
             return redirect('/products')->withErrors($validate);
         }
+
+        $is_store = $this->productInterface->store($request, $id);
+        if ($is_store) {
+            return redirect('/products')->with('success', 'Operation Successful');
+        }
+
+        return redirect('/products')->with('error', 'Internal Server Error');
     }
 
     public function status($id)
@@ -86,8 +86,8 @@ class ProductController extends Controller
         $is_change = $this->productInterface->status($id);
         if ($is_change) {
             return $this->jsonResponse(1, 'Status Changed');
-        } else {
-            return $this->jsonResponse(0, 'Product Not Found!');
         }
+
+        return $this->jsonResponse(0, 'Product Not Found!');
     }
 }

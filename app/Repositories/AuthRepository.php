@@ -66,9 +66,9 @@ class AuthRepository implements AuthInterface
                     'Password Reset Link sent to your Email Account.'
                 );
             }
-        } else {
-            return redirect('/forgot')->with('error', 'Invalid Email Address for your Account.');
         }
+
+        return redirect('/forgot')->with('error', 'Invalid Email Address for your Account.');
     }
 
     public function resetPassword(Request $request)
@@ -117,12 +117,13 @@ class AuthRepository implements AuthInterface
                 if ($hours > 3) {
                     return redirect('/forgot')->with('error', 'Password Reset Link has been expired.');
                 }
+
                 return view('auth.reset')->with(compact(['user', 'resetToken']));
-            } else {
-                return redirect('/forgot')->with('error', 'User does not exist.');
             }
-        } else {
-            return redirect('/forgot')->with('error', 'Invalid Password Reset Token');
+
+            return redirect('/forgot')->with('error', 'User does not exist.');
         }
+
+        return redirect('/forgot')->with('error', 'Invalid Password Reset Token');
     }
 }

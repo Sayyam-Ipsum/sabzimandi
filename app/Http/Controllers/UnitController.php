@@ -45,7 +45,7 @@ class UnitController extends Controller
         return view('units.listing');
     }
 
-    public function create($id = null)
+    public function create(int $id = null)
     {
         if ($id) {
             $unit = $this->unitInterface->listing($id);
@@ -56,31 +56,31 @@ class UnitController extends Controller
         return $this->modalResponse('Create Unit', 'units.form');
     }
 
-    public function store(Request $request, $id = null)
+    public function store(Request $request, int $id = null)
     {
         $validate = Validator::make($request->all(), [
-            'name' => 'required|unique:roles,name' . ($id ? ",$id" : ''),
+            'name' => 'required|unique:units,name' . ($id ? ",$id" : ''),
         ]);
 
-        if (!$validate->fails()) {
-            $is_store = $this->unitInterface->store($request, $id);
-            if ($is_store) {
-                return redirect('/units')->with('success', 'Operation Successful');
-            } else {
-                return redirect('/units')->with('error', 'Internal Server Error');
-            }
-        } else {
+        if ($validate->fails()) {
             return redirect('/units')->withErrors($validate);
         }
+
+        $is_store = $this->unitInterface->store($request, $id);
+        if ($is_store) {
+            return redirect('/units')->with('success', 'Operation Successful');
+        }
+
+        return redirect('/units')->with('error', 'Internal Server Error');
     }
 
-    public function status($id)
+    public function status(int $id)
     {
         $is_change = $this->unitInterface->status($id);
         if ($is_change) {
             return $this->jsonResponse(1, 'Status Changed');
-        } else {
-            return $this->jsonResponse(0, 'Unit Not Found!');
         }
+
+        return $this->jsonResponse(0, 'Unit Not Found!');
     }
 }

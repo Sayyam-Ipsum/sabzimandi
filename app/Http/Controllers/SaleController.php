@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Interfaces\ProductInterface;
 use App\Interfaces\SaleInterface;
 use App\Interfaces\UserInterface;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 
 class SaleController extends Controller
 {
+    use ResponseTrait;
+
     protected $saleInterface;
     protected $userInterface;
     protected $productInterface;
@@ -29,6 +32,7 @@ class SaleController extends Controller
     {
         $customers = $this->userInterface->activeCustomer();
         $products = $this->productInterface->activeProducts();
+
         return view('pos.index', compact(['customers', 'products']));
     }
 
@@ -40,21 +44,19 @@ class SaleController extends Controller
             'total' => 'required'
         ]);
 
-        if (!$validate->fails()) {
-            $is_sale = $this->saleInterface->sell($request);
-            if ($is_sale) {
-                $res['success'] = 1;
-                $res['message'] = 'Operation Successful';
-            } else {
-                $res['success'] = 2;
-                $res['message'] = 'Internal Server Error';
-            }
-        } else {
+        if ($validate->fails()) {
             $res['success'] = 3;
             $res['message'] = $validate->errors();
+
+            return response()->json($res);
         }
 
-        return response()->json($res);
+        $is_sale = $this->saleInterface->sell($request);
+        if ($is_sale) {
+            return $this->jsonResponse(1, 'Operation Successful');
+        }
+
+        return $this->jsonResponse(2, 'Internal Server Error');
     }
 
     public function list(Request $request)
@@ -63,7 +65,7 @@ class SaleController extends Controller
             $sales = $this->saleInterface->listing();
             return DataTables::of($sales)
                 ->addColumn('date', function ($sale) {
-                    return@$sale->created_at;
+                    return @$sale->created_at;
                 })
                 ->addColumn('customer', function ($sale) {
                     return @$sale->customer->name;
@@ -72,7 +74,7 @@ class SaleController extends Controller
                     return @$sale->customer->phone ? @$sale->user->phone : 'N/A';
                 })
                 ->addColumn('total', function ($sale) {
-                    return 'Rs. '.@$sale->total;
+                    return 'Rs. ' . @$sale->total;
                 })
                 ->addColumn('actions', function ($sale) {
                     $action = '';
@@ -105,7 +107,7 @@ class SaleController extends Controller
                     return @$sale->customer->phone ? @$sale->user->phone : 'N/A';
                 })
                 ->addColumn('total', function ($sale) {
-                    return 'Rs. '.@$sale->total;
+                    return 'Rs. ' . @$sale->total;
                 })
                 ->addColumn('actions', function ($sale) {
                     $action = '';
@@ -123,21 +125,17 @@ class SaleController extends Controller
         return view('sales.today');
     }
 
-    public function show($id)
+    public function show(int $id)
     {
         $sale = $this->saleInterface->listing($id);
-        $res['title'] = 'Sale Details';
-        $res['html'] = view('sales.view', compact(['sale']))->render();
 
-        return response()->json($res);
+        return $this->modalResponse('Sale Details', 'sales.view', ['sale' => $sale]);
     }
 
-    public function customerSales($customerID)
+    public function customerSales(int $customerID)
     {
         $sales = $this->saleInterface->customerSales($customerID);
-        $res['title'] = 'Customer Sales';
-        $res['html'] = view('sales.customer-sales', compact(['sales']))->render();
 
-        return response()->json($res);
+        return $this->modalResponse('Customer Sales', 'sales.customer-sales', ['sales' => $sales]);
     }
 }

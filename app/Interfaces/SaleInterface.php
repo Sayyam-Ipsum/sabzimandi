@@ -10,7 +10,7 @@ interface SaleInterface
 
     public function todaySale();
 
-    public function listing($id = null);
+    public function listing(int $id = null);
 
-    public function customerSales($id);
+    public function customerSales(int $id);
 }

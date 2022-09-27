@@ -99,7 +99,7 @@ class UserController extends Controller
         return view('users.customers');
     }
 
-    public function create(Request $request, $id = null)
+    public function create(Request $request, int $id = null)
     {
         $customer = $request->get('customer') == 1 ? 1 : 0;
         $roles = $this->roleInterface->activeRoles();
@@ -120,7 +120,7 @@ class UserController extends Controller
         );
     }
 
-    public function store(Request $request, $id = null)
+    public function store(Request $request, int $id = null)
     {
         $validate = Validator::make($request->all(), [
             'name' => 'required|unique:users,name' . ($id ? ",$id" : ''),
@@ -128,28 +128,29 @@ class UserController extends Controller
             'role_id' => 'required'
         ]);
 
-        if (!$validate->fails()) {
-            $is_store = $this->userInterface->store($request, $id);
-            if ($is_store) {
-                if ($request->role_id == customerRoleId()) {
-                    return redirect('/customers')->with('success', 'Operation Successful');
-                }
-                return redirect('/users')->with('success', 'Operation Successful');
-            } else {
-                return redirect('/users')->with('error', 'Internal Server Error');
-            }
-        } else {
+        if ($validate->fails()) {
             return redirect('/users')->withErrors($validate);
         }
+
+        $is_store = $this->userInterface->store($request, $id);
+        if ($is_store) {
+            if ($request->role_id == customerRoleId()) {
+                return redirect('/customers')->with('success', 'Operation Successful');
+            }
+
+            return redirect('/users')->with('success', 'Operation Successful');
+        }
+
+        return redirect('/users')->with('error', 'Internal Server Error');
     }
 
-    public function status($id)
+    public function status(int $id)
     {
         $is_change = $this->userInterface->status($id);
         if ($is_change) {
             return $this->jsonResponse(1, 'Status Changed');
-        } else {
-            return $this->jsonResponse(0, 'User Not Found!');
         }
+
+        return $this->jsonResponse(0, 'User Not Found!');
     }
 }

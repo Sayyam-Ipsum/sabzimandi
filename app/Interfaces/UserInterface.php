@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 interface UserInterface
 {
-    public function listing($id = null);
+    public function listing(int $id = null);
 
     public function customers();
 
@@ -14,7 +14,7 @@ interface UserInterface
 
     public function activeCustomer();
 
-    public function store(Request $request, $id = null);
+    public function store(Request $request, int $id = null);
 
-    public function status($id);
+    public function status(int $id);
 }

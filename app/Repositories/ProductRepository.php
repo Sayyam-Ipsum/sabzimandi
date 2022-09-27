@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class ProductRepository implements ProductInterface
 {
-    public function listing($id = null)
+    public function listing(int $id = null)
     {
         if ($id) {
             return Product::find($id);
@@ -24,7 +24,7 @@ class ProductRepository implements ProductInterface
         return Product::with('unit')->whereNull('deleted_at')->get();
     }
 
-    public function store(Request $request, $id = null)
+    public function store(Request $request, int $id = null)
     {
         try {
             DB::beginTransaction();
@@ -40,7 +40,7 @@ class ProductRepository implements ProductInterface
         }
     }
 
-    public function status($id)
+    public function status(int $id)
     {
         $product = Product::where('id', $id)
             ->withTrashed()

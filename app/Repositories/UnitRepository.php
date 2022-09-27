@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 
 class UnitRepository implements UnitInterface
 {
-    public function listing($id = null)
+    public function listing(int $id = null)
     {
         if ($id) {
             return Unit::find($id);
@@ -25,7 +25,7 @@ class UnitRepository implements UnitInterface
         return Unit::whereNull('deleted_at')->get();
     }
 
-    public function store(Request $request, $id = null)
+    public function store(Request $request, int $id = null)
     {
         try {
             DB::beginTransaction();
@@ -41,7 +41,7 @@ class UnitRepository implements UnitInterface
         }
     }
 
-    public function status($id)
+    public function status(int $id)
     {
         $unit = Unit::where('id', $id)
             ->withTrashed()

@@ -32,6 +32,9 @@ Route::post('/login', [AuthController::class, 'authenticate']);
 Route::post('/forgot', [AuthController::class, 'forgotPassword']);
 Route::post('/reset', [AuthController::class, 'resetPassword']);
 
+//-------------------------------------------------
+//--------------Dashboard Routes ------------------
+//-------------------------------------------------
 Route::group(['middleware' => 'auth'], function (){
     Route::get('/dashboard', [AuthController::class, 'dashboard'])->middleware('can:PageAccess.Dashboard');
     Route::get('/profile', [DashboardController::class, 'profile']);

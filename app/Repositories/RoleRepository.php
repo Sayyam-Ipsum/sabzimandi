@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
 class RoleRepository implements RoleInterface
 {
-    public function listing($id = null)
+    public function listing(int $id = null)
     {
         if ($id) {
             return Role::find($id);
@@ -26,7 +26,7 @@ class RoleRepository implements RoleInterface
         return Role::whereNull('deleted_at')->get();
     }
 
-    public function store(Request $request, $id = null)
+    public function store(Request $request, int $id = null)
     {
         try {
             DB::beginTransaction();
@@ -41,7 +41,7 @@ class RoleRepository implements RoleInterface
         }
     }
 
-    public function status($id)
+    public function status(int $id)
     {
         $role = Role::where('id', $id)
             ->withTrashed()
@@ -60,7 +60,7 @@ class RoleRepository implements RoleInterface
         }
     }
 
-    public function rolePermissionsListing($id)
+    public function rolePermissionsListing(int $id)
     {
         $permissions = Permission::all();
         $rolePermissions = DB::table('permissions')

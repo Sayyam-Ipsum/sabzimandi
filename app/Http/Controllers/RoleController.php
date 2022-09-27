@@ -57,35 +57,35 @@ class RoleController extends Controller
         return $this->modalResponse('Create Role', 'roles.form');
     }
 
-    public function store(Request $request, $id = null)
+    public function store(Request $request, int $id = null)
     {
         $validate = Validator::make($request->all(), [
             'name' => 'required|unique:roles,name' . ($id ? ",$id" : ''),
         ]);
 
-        if (!$validate->fails()) {
-            $is_store = $this->roleInterface->store($request, $id);
-            if ($is_store) {
-                return redirect('/roles')->with('success', 'Operation Successful');
-            } else {
-                return redirect('/roles')->with('error', 'Internal Server Error');
-            }
-        } else {
+        if ($validate->fails()) {
             return redirect('/roles')->withErrors($validate);
         }
+
+        $is_store = $this->roleInterface->store($request, $id);
+        if ($is_store) {
+            return redirect('/roles')->with('success', 'Operation Successful');
+        }
+
+        return redirect('/roles')->with('error', 'Internal Server Error');
     }
 
-    public function status($id)
+    public function status(int $id)
     {
         $is_change = $this->roleInterface->status($id);
         if ($is_change) {
             return $this->jsonResponse(1, 'Status Changed');
-        } else {
-            return $this->jsonResponse(0, 'Role Not Found!');
         }
+
+        return $this->jsonResponse(0, 'Role Not Found!');
     }
 
-    public function rolePermissionsListing($id)
+    public function rolePermissionsListing(int $id)
     {
         $role = $this->roleInterface->listing($id);
         $permissions = $this->roleInterface->rolePermissionsListing($id);

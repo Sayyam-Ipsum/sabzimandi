@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class UserRepository implements UserInterface
 {
-    public function listing($id = null)
+    public function listing(int $id = null)
     {
         if ($id) {
             return User::find($id);
@@ -37,7 +37,7 @@ class UserRepository implements UserInterface
         return User::where('role_id_fk', customerRoleId())->whereNull('deleted_at')->get();
     }
 
-    public function store(Request $request, $id = null)
+    public function store(Request $request, int $id = null)
     {
         try {
             DB::beginTransaction();
@@ -67,7 +67,7 @@ class UserRepository implements UserInterface
         }
     }
 
-    public function status($id)
+    public function status(int $id)
     {
         $user = User::where('id', $id)
             ->withTrashed()
