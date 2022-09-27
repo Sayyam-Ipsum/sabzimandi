@@ -11,15 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
-/**
- *
- */
 class UserRepository implements UserInterface
 {
-    /**
-     * @param $id
-     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Query\Builder[]|\Illuminate\Support\Collection
-     */
     public function listing($id = null)
     {
         if ($id) {
@@ -34,9 +27,6 @@ class UserRepository implements UserInterface
         return User::where('role_id_fk', customerRoleId())->withTrashed()->get();
     }
 
-    /**
-     * @return mixed
-     */
     public function activeUsers()
     {
         return User::whereNot('role_id_fk', customerRoleId())->whereNull('deleted_at')->get();
@@ -47,11 +37,6 @@ class UserRepository implements UserInterface
         return User::where('role_id_fk', customerRoleId())->whereNull('deleted_at')->get();
     }
 
-    /**
-     * @param Request $request
-     * @param $id
-     * @return bool
-     */
     public function store(Request $request, $id = null)
     {
         try {
@@ -82,10 +67,6 @@ class UserRepository implements UserInterface
         }
     }
 
-    /**
-     * @param $id
-     * @return bool
-     */
     public function status($id)
     {
         $user = User::where('id', $id)

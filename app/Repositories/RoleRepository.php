@@ -9,15 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-/**
- *
- */
 class RoleRepository implements RoleInterface
 {
-    /**
-     * @param $id
-     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Query\Builder[]|\Illuminate\Support\Collection
-     */
     public function listing($id = null)
     {
         if ($id) {
@@ -28,19 +21,11 @@ class RoleRepository implements RoleInterface
             ->get();
     }
 
-    /**
-     * @return mixed
-     */
     public function activeRoles()
     {
         return Role::whereNull('deleted_at')->get();
     }
 
-    /**
-     * @param Request $request
-     * @param $id
-     * @return bool
-     */
     public function store(Request $request, $id = null)
     {
         try {
@@ -56,10 +41,6 @@ class RoleRepository implements RoleInterface
         }
     }
 
-    /**
-     * @param $id
-     * @return bool
-     */
     public function status($id)
     {
         $role = Role::where('id', $id)
@@ -79,10 +60,6 @@ class RoleRepository implements RoleInterface
         }
     }
 
-    /**
-     * @param $id
-     * @return array|\Illuminate\Database\Eloquent\Collection
-     */
     public function rolePermissionsListing($id)
     {
         $permissions = Permission::all();
@@ -112,10 +89,6 @@ class RoleRepository implements RoleInterface
         return isset($permissions) ? $permissions : [];
     }
 
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function managePermissions(Request $request)
     {
         $validate = Validator::make($request->all(), [

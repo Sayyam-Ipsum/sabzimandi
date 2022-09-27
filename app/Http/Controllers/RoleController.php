@@ -8,31 +8,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 
-/**
- *
- */
 class RoleController extends Controller
 {
     use ResponseTrait;
 
-    /**
-     * @var RoleInterface
-     */
     protected $roleInterface;
 
-    /**
-     * @param RoleInterface $roleInterface
-     */
     public function __construct(RoleInterface $roleInterface)
     {
         $this->roleInterface = $roleInterface;
     }
 
-    /**
-     * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\JsonResponse
-     * @throws \Exception
-     */
     public function index(Request $request)
     {
         if ($request->ajax()) {
@@ -60,10 +46,6 @@ class RoleController extends Controller
         return view('roles.listing');
     }
 
-    /**
-     * @param $id
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function create($id = null)
     {
         if ($id) {
@@ -75,11 +57,6 @@ class RoleController extends Controller
         return $this->modalResponse('Create Role', 'roles.form');
     }
 
-    /**
-     * @param Request $request
-     * @param $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     */
     public function store(Request $request, $id = null)
     {
         $validate = Validator::make($request->all(), [
@@ -98,10 +75,6 @@ class RoleController extends Controller
         }
     }
 
-    /**
-     * @param $id
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function status($id)
     {
         $is_change = $this->roleInterface->status($id);
@@ -112,10 +85,6 @@ class RoleController extends Controller
         }
     }
 
-    /**
-     * @param $id
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function rolePermissionsListing($id)
     {
         $role = $this->roleInterface->listing($id);
@@ -128,10 +97,6 @@ class RoleController extends Controller
         );
     }
 
-    /**
-     * @param Request $request
-     * @return mixed
-     */
     public function managePermissions(Request $request)
     {
         return $this->roleInterface->managePermissions($request);

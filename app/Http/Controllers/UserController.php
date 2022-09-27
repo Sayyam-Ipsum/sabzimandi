@@ -10,37 +10,19 @@ use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 use App\Traits\ResponseTrait;
 
-/**
- *
- */
 class UserController extends Controller
 {
     use ResponseTrait;
 
-    /**
-     * @var UserInterface
-     */
     protected $userInterface;
-
-    /**
-     * @var RoleInterface
-     */
     protected $roleInterface;
 
-    /**
-     * @param UserInterface $userInterface
-     */
     public function __construct(UserInterface $userInterface, RoleInterface $roleInterface)
     {
         $this->userInterface = $userInterface;
         $this->roleInterface = $roleInterface;
     }
 
-    /**
-     * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\JsonResponse
-     * @throws \Exception
-     */
     public function index(Request $request)
     {
         if ($request->ajax()) {
@@ -80,11 +62,6 @@ class UserController extends Controller
         return view('users.listing');
     }
 
-    /**
-     * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\JsonResponse
-     * @throws \Exception
-     */
     public function customers(Request $request)
     {
         if ($request->ajax()) {
@@ -122,11 +99,6 @@ class UserController extends Controller
         return view('users.customers');
     }
 
-    /**
-     * @param Request $request
-     * @param $id
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function create(Request $request, $id = null)
     {
         $customer = $request->get('customer') == 1 ? 1 : 0;
@@ -148,11 +120,6 @@ class UserController extends Controller
         );
     }
 
-    /**
-     * @param Request $request
-     * @param $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     */
     public function store(Request $request, $id = null)
     {
         $validate = Validator::make($request->all(), [
@@ -176,10 +143,6 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * @param $id
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function status($id)
     {
         $is_change = $this->userInterface->status($id);
