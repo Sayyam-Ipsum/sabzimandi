@@ -3,16 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Interfaces\RoleInterface;
+use App\Models\Role;
 use App\Traits\ResponseTrait;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Js;
 use Yajra\DataTables\DataTables;
 
 class RoleController extends Controller
 {
     use ResponseTrait;
 
-    protected $roleInterface;
+    protected RoleInterface $roleInterface;
 
     public function __construct(RoleInterface $roleInterface)
     {
@@ -46,7 +50,7 @@ class RoleController extends Controller
         return view('roles.listing');
     }
 
-    public function create($id = null)
+    public function create($id = null): JsonResponse
     {
         if ($id) {
             $role = $this->roleInterface->listing($id);
@@ -57,7 +61,7 @@ class RoleController extends Controller
         return $this->modalResponse('Create Role', 'roles.form');
     }
 
-    public function store(Request $request, int $id = null)
+    public function store(Request $request, int $id = null): RedirectResponse
     {
         $validate = Validator::make($request->all(), [
             'name' => 'required|unique:roles,name' . ($id ? ",$id" : ''),
@@ -75,7 +79,7 @@ class RoleController extends Controller
         return redirect('/roles')->with('error', 'Internal Server Error');
     }
 
-    public function status(int $id)
+    public function status(int $id): JsonResponse
     {
         $is_change = $this->roleInterface->status($id);
         if ($is_change) {
@@ -85,7 +89,7 @@ class RoleController extends Controller
         return $this->jsonResponse(0, 'Role Not Found!');
     }
 
-    public function rolePermissionsListing(int $id)
+    public function rolePermissionsListing(int $id): JsonResponse
     {
         $role = $this->roleInterface->listing($id);
         $permissions = $this->roleInterface->rolePermissionsListing($id);
@@ -97,7 +101,7 @@ class RoleController extends Controller
         );
     }
 
-    public function managePermissions(Request $request)
+    public function managePermissions(Request $request): JsonResponse
     {
         return $this->roleInterface->managePermissions($request);
     }

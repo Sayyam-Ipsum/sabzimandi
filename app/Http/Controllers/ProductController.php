@@ -13,8 +13,8 @@ class ProductController extends Controller
 {
     use ResponseTrait;
 
-    protected $productInterface;
-    protected $unitInterface;
+    protected ProductInterface $productInterface;
+    protected UnitInterface $unitInterface;
 
     public function __construct(ProductInterface $productInterface, UnitInterface $unitInterface)
     {

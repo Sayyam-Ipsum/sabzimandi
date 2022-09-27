@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Interfaces\RoleInterface;
 use App\Interfaces\UserInterface;
+use App\Models\Role;
 use Dflydev\DotAccessData\Data;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
@@ -14,8 +17,8 @@ class UserController extends Controller
 {
     use ResponseTrait;
 
-    protected $userInterface;
-    protected $roleInterface;
+    protected UserInterface $userInterface;
+    protected RoleInterface $roleInterface;
 
     public function __construct(UserInterface $userInterface, RoleInterface $roleInterface)
     {
@@ -99,7 +102,7 @@ class UserController extends Controller
         return view('users.customers');
     }
 
-    public function create(Request $request, int $id = null)
+    public function create(Request $request, int $id = null): JsonResponse
     {
         $customer = $request->get('customer') == 1 ? 1 : 0;
         $roles = $this->roleInterface->activeRoles();
@@ -120,7 +123,7 @@ class UserController extends Controller
         );
     }
 
-    public function store(Request $request, int $id = null)
+    public function store(Request $request, int $id = null): RedirectResponse
     {
         $validate = Validator::make($request->all(), [
             'name' => 'required|unique:users,name' . ($id ? ",$id" : ''),
@@ -134,7 +137,7 @@ class UserController extends Controller
 
         $is_store = $this->userInterface->store($request, $id);
         if ($is_store) {
-            if ($request->role_id == customerRoleId()) {
+            if ($request->input('role_id') == customerRoleId()) {
                 return redirect('/customers')->with('success', 'Operation Successful');
             }
 
@@ -144,7 +147,7 @@ class UserController extends Controller
         return redirect('/users')->with('error', 'Internal Server Error');
     }
 
-    public function status(int $id)
+    public function status(int $id): JsonResponse
     {
         $is_change = $this->userInterface->status($id);
         if ($is_change) {

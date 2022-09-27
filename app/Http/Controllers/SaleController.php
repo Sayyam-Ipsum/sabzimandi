@@ -6,17 +6,19 @@ use App\Interfaces\ProductInterface;
 use App\Interfaces\SaleInterface;
 use App\Interfaces\UserInterface;
 use App\Traits\ResponseTrait;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\View\View;
 use Yajra\DataTables\DataTables;
 
 class SaleController extends Controller
 {
     use ResponseTrait;
 
-    protected $saleInterface;
-    protected $userInterface;
-    protected $productInterface;
+    protected SaleInterface $saleInterface;
+    protected UserInterface $userInterface;
+    protected ProductInterface $productInterface;
 
     public function __construct(
         SaleInterface $saleInterface,
@@ -28,7 +30,7 @@ class SaleController extends Controller
         $this->productInterface = $productInterface;
     }
 
-    public function pos()
+    public function pos(): View
     {
         $customers = $this->userInterface->activeCustomer();
         $products = $this->productInterface->activeProducts();
@@ -36,7 +38,7 @@ class SaleController extends Controller
         return view('pos.index', compact(['customers', 'products']));
     }
 
-    public function sell(Request $request)
+    public function sell(Request $request): JsonResponse
     {
         $validate = Validator::make($request->all(), [
             'customer_id' => 'required',
@@ -125,14 +127,14 @@ class SaleController extends Controller
         return view('sales.today');
     }
 
-    public function show(int $id)
+    public function show(int $id): JsonResponse
     {
         $sale = $this->saleInterface->listing($id);
 
         return $this->modalResponse('Sale Details', 'sales.view', ['sale' => $sale]);
     }
 
-    public function customerSales(int $customerID)
+    public function customerSales(int $customerID): JsonResponse
     {
         $sales = $this->saleInterface->customerSales($customerID);
 

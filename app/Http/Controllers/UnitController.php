@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Interfaces\UnitInterface;
 use App\Traits\ResponseTrait;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
@@ -12,7 +14,7 @@ class UnitController extends Controller
 {
     use ResponseTrait;
 
-    protected $unitInterface;
+    protected UnitInterface $unitInterface;
 
     public function __construct(UnitInterface $unitInterface)
     {
@@ -45,7 +47,7 @@ class UnitController extends Controller
         return view('units.listing');
     }
 
-    public function create(int $id = null)
+    public function create(int $id = null): JsonResponse
     {
         if ($id) {
             $unit = $this->unitInterface->listing($id);
@@ -56,7 +58,7 @@ class UnitController extends Controller
         return $this->modalResponse('Create Unit', 'units.form');
     }
 
-    public function store(Request $request, int $id = null)
+    public function store(Request $request, int $id = null): RedirectResponse
     {
         $validate = Validator::make($request->all(), [
             'name' => 'required|unique:units,name' . ($id ? ",$id" : ''),
@@ -74,7 +76,7 @@ class UnitController extends Controller
         return redirect('/units')->with('error', 'Internal Server Error');
     }
 
-    public function status(int $id)
+    public function status(int $id): JsonResponse
     {
         $is_change = $this->unitInterface->status($id);
         if ($is_change) {

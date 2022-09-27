@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Interfaces\DashboardInterface;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-    protected $dashboardInterface;
+    protected DashboardInterface $dashboardInterface;
 
     public function __construct(DashboardInterface $dashboardInterface)
     {
@@ -38,7 +40,7 @@ class DashboardController extends Controller
         return view('dashboard.profile');
     }
 
-    public function setting()
+    public function setting(): View
     {
         return view('dashboard.setting');
     }
