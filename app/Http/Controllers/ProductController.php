@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Interfaces\ProductInterface;
 use App\Interfaces\UnitInterface;
 use App\Traits\ResponseTrait;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Yajra\DataTables\DataTables;
 
 class ProductController extends Controller
@@ -22,7 +25,7 @@ class ProductController extends Controller
         $this->unitInterface = $unitInterface;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse|View
     {
         if ($request->ajax()) {
             $products = $this->productInterface->listing();
@@ -51,7 +54,7 @@ class ProductController extends Controller
         return view('products.listing');
     }
 
-    public function create($id = null)
+    public function create($id = null): JsonResponse
     {
         $units = $this->unitInterface->activeUnits();
         if ($id) {
@@ -63,7 +66,7 @@ class ProductController extends Controller
         return $this->modalResponse('Create Product', 'products.form', ['units' => $units]);
     }
 
-    public function store(Request $request, int $id = null)
+    public function store(Request $request, int $id = null): RedirectResponse
     {
         $validate = Validator::make($request->all(), [
             'name' => 'required|unique:roles,name' . ($id ? ",$id" : ''),
@@ -73,18 +76,16 @@ class ProductController extends Controller
             return redirect('/products')->withErrors($validate);
         }
 
-        $is_store = $this->productInterface->store($request, $id);
-        if ($is_store) {
+        if ($this->productInterface->store($request, $id)) {
             return redirect('/products')->with('success', 'Operation Successful');
         }
 
         return redirect('/products')->with('error', 'Internal Server Error');
     }
 
-    public function status($id)
+    public function status($id): JsonResponse
     {
-        $is_change = $this->productInterface->status($id);
-        if ($is_change) {
+        if ($this->productInterface->status($id)) {
             return $this->jsonResponse(1, 'Status Changed');
         }
 

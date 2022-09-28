@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\View\View;
 use Yajra\DataTables\DataTables;
 use App\Traits\ResponseTrait;
 
@@ -26,7 +27,7 @@ class UserController extends Controller
         $this->roleInterface = $roleInterface;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse|View
     {
         if ($request->ajax()) {
             $users = $this->userInterface->listing();
@@ -65,7 +66,7 @@ class UserController extends Controller
         return view('users.listing');
     }
 
-    public function customers(Request $request)
+    public function customers(Request $request): JsonResponse|View
     {
         if ($request->ajax()) {
             $customers = $this->userInterface->customers();
@@ -135,8 +136,7 @@ class UserController extends Controller
             return redirect('/users')->withErrors($validate);
         }
 
-        $is_store = $this->userInterface->store($request, $id);
-        if ($is_store) {
+        if ($this->userInterface->store($request, $id)) {
             if ($request->input('role_id') == customerRoleId()) {
                 return redirect('/customers')->with('success', 'Operation Successful');
             }
@@ -149,8 +149,7 @@ class UserController extends Controller
 
     public function status(int $id): JsonResponse
     {
-        $is_change = $this->userInterface->status($id);
-        if ($is_change) {
+        if ($this->userInterface->status($id)) {
             return $this->jsonResponse(1, 'Status Changed');
         }
 

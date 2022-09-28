@@ -4,12 +4,14 @@ namespace App\Repositories;
 
 use App\Interfaces\ProductInterface;
 use App\Models\Product;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class ProductRepository implements ProductInterface
 {
-    public function listing(int $id = null)
+    public function listing(int $id = null): Arrayable
     {
         if ($id) {
             return Product::find($id);
@@ -19,13 +21,15 @@ class ProductRepository implements ProductInterface
             ->get();
     }
 
-    public function activeProducts()
+    public function activeProducts(): Collection
     {
         return Product::with('unit')->whereNull('deleted_at')->get();
     }
 
-    public function store(Request $request, int $id = null)
+    public function store(Request $request, int $id = null): bool
     {
+        $stored = true;
+
         try {
             DB::beginTransaction();
             $product = $id ? Product::find($id) : new Product();
@@ -33,29 +37,32 @@ class ProductRepository implements ProductInterface
             $product->unit_id_fk = $request->unit;
             $product->save();
             DB::commit();
-            return true;
         } catch (\Exception $e) {
             DB::rollBack();
-            return false;
+            $stored = false;
         }
+
+        return $stored;
     }
 
-    public function status(int $id)
+    public function status(int $id): bool
     {
+        $status = true;
+
         $product = Product::where('id', $id)
             ->withTrashed()
             ->first();
         if ($product) {
             if ($product->deleted_at == null) {
                 $product->destroy($id);
-                return true;
-            } else {
-                $product->deleted_at = null;
-                $product->save();
-                return true;
             }
+
+            $product->deleted_at = null;
+            $product->save();
         } else {
-            return false;
+            $status = false;
         }
+
+        return $status;
     }
 }

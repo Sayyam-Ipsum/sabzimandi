@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardRepository implements DashboardInterface
 {
-    public function storeProfile(Request $request)
+    public function storeProfile(Request $request): bool
     {
         try {
             DB::beginTransaction();

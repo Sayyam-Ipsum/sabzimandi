@@ -8,6 +8,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Js;
+use Illuminate\View\View;
 use Yajra\DataTables\DataTables;
 
 class UnitController extends Controller
@@ -21,7 +23,7 @@ class UnitController extends Controller
         $this->unitInterface = $unitInterface;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse|View
     {
         if ($request->ajax()) {
             $units = $this->unitInterface->listing();
@@ -68,8 +70,7 @@ class UnitController extends Controller
             return redirect('/units')->withErrors($validate);
         }
 
-        $is_store = $this->unitInterface->store($request, $id);
-        if ($is_store) {
+        if ($this->unitInterface->store($request, $id)) {
             return redirect('/units')->with('success', 'Operation Successful');
         }
 
@@ -78,8 +79,7 @@ class UnitController extends Controller
 
     public function status(int $id): JsonResponse
     {
-        $is_change = $this->unitInterface->status($id);
-        if ($is_change) {
+        if ($this->unitInterface->status($id)) {
             return $this->jsonResponse(1, 'Status Changed');
         }
 

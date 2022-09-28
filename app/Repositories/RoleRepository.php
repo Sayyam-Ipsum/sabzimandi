@@ -6,6 +6,7 @@ use App\Interfaces\RoleInterface;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Traits\ResponseTrait;
+use FontLib\TrueType\Collection;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class RoleRepository implements RoleInterface
 {
     use ResponseTrait;
 
-    public function listing(int $id = null)
+    public function listing(int $id = null): Arrayable
     {
         if ($id) {
             return Role::find($id);
@@ -26,44 +27,50 @@ class RoleRepository implements RoleInterface
             ->get();
     }
 
-    public function activeRoles()
+    public function activeRoles(): Collection
     {
         return Role::whereNull('deleted_at')
             ->get();
     }
 
-    public function store(Request $request, int $id = null)
+    public function store(Request $request, int $id = null): bool
     {
+        $stored = true;
+
         try {
             DB::beginTransaction();
             $role = $id ? Role::find($id) : new Role();
             $role->name = $request->name;
             $role->save();
             DB::commit();
-            return true;
         } catch (\Exception $e) {
             DB::rollBack();
-            return false;
+            $stored = false;
         }
+
+        return $stored;
     }
 
-    public function status(int $id)
+    public function status(int $id): bool
     {
+        $status = true;
+
         $role = Role::where('id', $id)
             ->withTrashed()
             ->first();
         if ($role) {
             if ($role->deleted_at == null) {
                 $role->destroy($id);
-                return true;
-            } else {
-                $role->deleted_at = null;
-                $role->save();
-                return true;
             }
+
+            $role->deleted_at = null;
+            $role->save();
+
         } else {
-            return false;
+            $status = false;
         }
+
+        return $status;
     }
 
     public function rolePermissionsListing(int $id): Arrayable

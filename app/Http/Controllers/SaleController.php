@@ -53,15 +53,14 @@ class SaleController extends Controller
             return response()->json($res);
         }
 
-        $is_sale = $this->saleInterface->sell($request);
-        if ($is_sale) {
+        if ($this->saleInterface->sell($request)) {
             return $this->jsonResponse(1, 'Operation Successful');
         }
 
         return $this->jsonResponse(2, 'Internal Server Error');
     }
 
-    public function list(Request $request)
+    public function list(Request $request): JsonResponse|View
     {
         if ($request->ajax()) {
             $sales = $this->saleInterface->listing();
@@ -94,7 +93,7 @@ class SaleController extends Controller
         return view('sales.listing');
     }
 
-    public function todaySales(Request $request)
+    public function todaySales(Request $request): JsonResponse|View
     {
         if ($request->ajax()) {
             $sales = $this->saleInterface->todaySale();

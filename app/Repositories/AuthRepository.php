@@ -5,43 +5,30 @@ namespace App\Repositories;
 use App\Interfaces\AuthInterface;
 use App\Models\User;
 use DateTime;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class AuthRepository implements AuthInterface
 {
-    public function authenticate(Request $request)
+    public function authenticate(Request $request): bool
     {
-        $validation = Validator::make($request->all(), [
-            'email' => 'required|email|max:50',
-            'password' => 'required|min:8'
-        ]);
-
-        if ($validation->fails()) {
-            return redirect('/login')->withErrors( $validation->errors());
-        }
+        $login = false;
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            return redirect('/dashboard');
+            $login = true;
         }
 
-        return redirect('/login')->with('error', 'Invalid Credentials');
+        return $login;
     }
 
-    public function forgotPassword(Request $request)
+    public function forgotPassword(Request $request): bool|RedirectResponse
     {
-        $validation = Validator::make($request->all(), [
-            'email' => 'required|email',
-        ]);
-
-        if ($validation->fails()) {
-            return redirect('/forgot')->withErrors($validation);
-        }
-
         $user = User::where('email', $request->email)
             ->first();
         if ($user) {
@@ -71,32 +58,21 @@ class AuthRepository implements AuthInterface
         return redirect('/forgot')->with('error', 'Invalid Email Address for your Account.');
     }
 
-    public function resetPassword(Request $request)
+    public function resetPassword(Request $request): bool|RedirectResponse
     {
-        $validation = Validator::make($request->all(), [
-            'password' => 'min:8|required_with:confirm_password|same:confirm_password',
-            'confirm_password' => 'min:8',
-            'user_id' => 'required',
-            'reset_token' => 'required'
-        ]);
-
-        if (!$validation->fails()) {
-            return redirect('/reset/' . $request->reset_token)->withErrors($validation);
-        }
-
         $user = User::find($request->user_id);
-//            $newPassword = Hash::make($request->password);
         $newPassword = password_hash($request->password, PASSWORD_DEFAULT);
         if ($user->password == $newPassword) {
             return redirect('/reset/' . $request->reset_token)->with('error', 'Please Enter New Password');
         }
+
         $user->password = $newPassword;
         $user->save();
 
         return redirect('/login');
     }
 
-    public function resetPasswordView($token)
+    public function resetPasswordView($token): View|RedirectResponse
     {
         if (!$token) {
             return redirect('/forgot')->with('error', 'Reset Password Token not found');

@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Js;
+use Illuminate\View\View;
 use Yajra\DataTables\DataTables;
 
 class RoleController extends Controller
@@ -23,7 +24,7 @@ class RoleController extends Controller
         $this->roleInterface = $roleInterface;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse|View
     {
         if ($request->ajax()) {
             $roles = $this->roleInterface->listing();
@@ -71,8 +72,7 @@ class RoleController extends Controller
             return redirect('/roles')->withErrors($validate);
         }
 
-        $is_store = $this->roleInterface->store($request, $id);
-        if ($is_store) {
+        if ($this->roleInterface->store($request, $id)) {
             return redirect('/roles')->with('success', 'Operation Successful');
         }
 
@@ -81,8 +81,7 @@ class RoleController extends Controller
 
     public function status(int $id): JsonResponse
     {
-        $is_change = $this->roleInterface->status($id);
-        if ($is_change) {
+        if ($this->roleInterface->status($id)) {
             return $this->jsonResponse(1, 'Status Changed');
         }
 

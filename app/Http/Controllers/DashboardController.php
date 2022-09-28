@@ -17,7 +17,7 @@ class DashboardController extends Controller
         $this->dashboardInterface = $dashboardInterface;
     }
 
-    public function profile(Request $request)
+    public function profile(Request $request): View|RedirectResponse
     {
         if ($request->post()) {
             $validate = Validator::make($request->all(), [
@@ -29,8 +29,7 @@ class DashboardController extends Controller
                 return redirect('/profile')->withErrors($validate);
             }
 
-            $is_store = $this->dashboardInterface->storeProfile($request);
-            if ($is_store) {
+            if ($this->dashboardInterface->storeProfile($request)) {
                 return redirect('/profile')->with('success', 'Profile Updated Successfully');
             }
 

@@ -37,8 +37,10 @@ class UserRepository implements UserInterface
         return User::where('role_id_fk', customerRoleId())->whereNull('deleted_at')->get();
     }
 
-    public function store(Request $request, int $id = null)
+    public function store(Request $request, int $id = null): bool
     {
+        $stored = true;
+
         try {
             DB::beginTransaction();
             $user = $id ? User::find($id) : new User();
@@ -60,29 +62,32 @@ class UserRepository implements UserInterface
             }
 
             DB::commit();
-            return true;
         } catch (\Exception $e) {
             DB::rollBack();
-            return false;
+            $stored = false;
         }
+
+        return $stored;
     }
 
-    public function status(int $id)
+    public function status(int $id): bool
     {
+        $status = true;
+
         $user = User::where('id', $id)
             ->withTrashed()
             ->first();
         if ($user) {
             if ($user->deleted_at == null) {
                 $user->destroy($id);
-                return true;
-            } else {
-                $user->deleted_at = null;
-                $user->save();
-                return true;
             }
+
+            $user->deleted_at = null;
+            $user->save();
         } else {
-            return false;
+            $status = false;
         }
+
+        return $status;
     }
 }

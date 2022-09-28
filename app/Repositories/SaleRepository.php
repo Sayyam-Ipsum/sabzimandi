@@ -5,14 +5,17 @@ namespace App\Repositories;
 use App\Interfaces\SaleInterface;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class SaleRepository implements SaleInterface
 {
-    public function sell(Request $request)
+    public function sell(Request $request): bool
     {
+        $stored = true;
+
         try {
             DB::beginTransaction();
             $invoice = new Invoice();
@@ -29,15 +32,16 @@ class SaleRepository implements SaleInterface
                     $item->save();
                 }
                 DB::commit();
-                return true;
             } else {
                 DB::rollBack();
-                return false;
+                $stored = false;
             }
-
         } catch (\Exception $e) {
-            return false;
+            DB::rollBack();
+            $stored = false;
         }
+
+        return $stored;
     }
 
     public function todaySale()
