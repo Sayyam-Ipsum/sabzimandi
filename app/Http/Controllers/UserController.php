@@ -89,7 +89,8 @@ class UserController extends Controller
                         $action .= '<button class="btn btn-sm btn-edit btn-secondary mr-1" data-id="' . $customers->id . '">
                             <i class="fa fa-pencil-alt"></i></button>';
                         $action .= '<a class="btn btn-sm btn-status btn-danger mr-1" data-id="' . $customers->id . '"><i class="fas fa-user-lock"></i></a>';
-                        $action .= '<a class="btn btn-sm btn-sales btn-info" data-id="' . $customers->id . '"><i class="fas fa-arrows-alt mr-1"></i>Sales</a>';
+                        $action .= '<a class="btn btn-sm btn-sales btn-info mr-1" data-id="' . $customers->id . '"><i class="fas fa-arrows-alt mr-1"></i>Sales</a>';
+                        $action .= '<a class="btn btn-sm btn-payment btn-dark" data-id="' . $customers->id . '"><i class="fas fa-plus-square mr-1"></i>Payment</a>';
                     } else {
                         $action .= '<a class="btn btn-sm btn-status btn-success" data-id="' . $customers->id . '"><i class="fas fa-lock-open"></i></a>';
                     }

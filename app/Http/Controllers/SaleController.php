@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Interfaces\ProductInterface;
 use App\Interfaces\SaleInterface;
 use App\Interfaces\UserInterface;
+use App\Models\Payment;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -138,5 +139,31 @@ class SaleController extends Controller
         $sales = $this->saleInterface->customerSales($customerID);
 
         return $this->modalResponse('Customer Sales', 'sales.customer-sales', ['sales' => $sales]);
+    }
+
+    public function customerPaymentModal($customerID): JsonResponse
+    {
+        $payment = $this->saleInterface->customerLastPayment($customerID);
+
+        return $this->modalResponse('Add Payment', 'users.payment', ['payment' => $payment]);
+    }
+
+    public function storePayment(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'payment_id' => 'required',
+            'total' => 'required',
+            'payable' => 'required'
+        ]);
+
+        if ($validate->fails()) {
+            return redirect('/customers')->withErrors($validate);
+        }
+
+        if ($this->saleInterface->storePayment($request)) {
+            return redirect('/customers')->with('success', 'Payment Add Successfully');
+        }
+
+        return redirect('/customers')->with('error', 'Internal Server Error');
     }
 }

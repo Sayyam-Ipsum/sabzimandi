@@ -69,6 +69,12 @@
             });
         });
 
+        // Payment
+        $("#data-table").on('click', '.btn-payment', function() {
+            var id = $(this).data('id');
+            open_modal('/sales/payment/' + id);
+        });
+
         // Sales
         $("#data-table").on('click', '.btn-sales', function() {
             var id = $(this).data('id');

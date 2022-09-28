@@ -102,7 +102,17 @@ Route::group(['middleware' => 'auth'], function (){
         Route::get('/today', [SaleController::class, 'todaySales']);
         Route::get('/{id}', [SaleController::class, 'show']);
         Route::get('/customer/{customerID}', [SaleController::class, 'customerSales']);
+        Route::get('/payment/{customerID}', [SaleController::class, 'customerPaymentModal']);
+    });
+
+    Route::prefix('payment')->group(function (){
+        Route::post('/', [SaleController::class, 'storePayment']);
     });
 });
 
-
+//-------------------------------------------------
+//--------------System Routes ------------------
+//-------------------------------------------------
+Route::get('/up', [AuthController::class, 'up']);
+Route::get('/down', [AuthController::class, 'down']);
+Route::get('/optimize', [AuthController::class, 'optimize']);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Interfaces\AuthInterface;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
@@ -98,5 +99,20 @@ class AuthController extends Controller
     {
         Auth::logout();
         return redirect('/login');
+    }
+
+    public function up()
+    {
+        Artisan::call('up');
+    }
+
+    public function down()
+    {
+        Artisan::call('down');
+    }
+
+    public function optimize()
+    {
+        Artisan::call('optimize:clear');
     }
 }

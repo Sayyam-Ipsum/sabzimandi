@@ -13,4 +13,8 @@ interface SaleInterface
     public function listing(int $id = null);
 
     public function customerSales(int $id);
+
+    public function customerLastPayment(int $customerId);
+
+    public function storePayment(Request $request);
 }
