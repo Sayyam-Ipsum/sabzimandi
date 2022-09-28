@@ -103,6 +103,15 @@ class RoleController extends Controller
 
     public function managePermissions(Request $request): JsonResponse
     {
+        $validate = Validator::make($request->all(), [
+            'role_id' => 'required',
+            'permission_id' => 'required'
+        ]);
+
+        if ($validate->fails()) {
+            return $this->jsonResponse(0, 'Validation Error');
+        }
+
         return $this->roleInterface->managePermissions($request);
     }
 }

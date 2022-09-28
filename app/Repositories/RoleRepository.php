@@ -5,12 +5,17 @@ namespace App\Repositories;
 use App\Interfaces\RoleInterface;
 use App\Models\Permission;
 use App\Models\Role;
+use App\Traits\ResponseTrait;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class RoleRepository implements RoleInterface
 {
+    use ResponseTrait;
+
     public function listing(int $id = null)
     {
         if ($id) {
@@ -23,7 +28,8 @@ class RoleRepository implements RoleInterface
 
     public function activeRoles()
     {
-        return Role::whereNull('deleted_at')->get();
+        return Role::whereNull('deleted_at')
+            ->get();
     }
 
     public function store(Request $request, int $id = null)
@@ -60,8 +66,9 @@ class RoleRepository implements RoleInterface
         }
     }
 
-    public function rolePermissionsListing(int $id)
+    public function rolePermissionsListing(int $id): Arrayable
     {
+        $sortedPermissions = [];
         $permissions = Permission::all();
         $rolePermissions = DB::table('permissions')
             ->where('role_has_permissions.role_id', $id)
@@ -73,58 +80,47 @@ class RoleRepository implements RoleInterface
             )
             ->get();
 
-        if (sizeof($permissions) > 0) {
+        if (is_iterable($rolePermissions)) {
+            foreach ($rolePermissions as $e) {
+                $sortedPermissions[$e->permission_id] = $e;
+            }
+        }
+
+        if (is_iterable($permissions)) {
             foreach ($permissions as $permission) {
                 $permission['status'] = false;
-                if (sizeof($rolePermissions) > 0) {
-                    foreach ($rolePermissions as $rolePermission) {
-                        if ($permission->id == $rolePermission->permission_id) {
-                            $permission['status'] = true;
-                        }
-                    }
+                if (array_key_exists($permission->id, $sortedPermissions)) {
+                    $permission['status'] = true;
                 }
             }
         }
 
-        return isset($permissions) ? $permissions : [];
+        return is_iterable($permissions) ? $permissions : [];
     }
 
-    public function managePermissions(Request $request)
+    public function managePermissions(Request $request): JsonResponse
     {
-        $validate = Validator::make($request->all(), [
-            'role_id' => 'required',
-            'permission_id' => 'required'
-        ]);
+        try {
+            DB::beginTransaction();
+            $checkPermission = DB::table('role_has_permissions')
+                ->where('role_id', $request->role_id)
+                ->where('permission_id', $request->permission_id)
+                ->first();
+            $role = Role::findById($request->role_id);
+            $permission = Permission::findById($request->permission_id);
 
-        if (!$validate->fails()) {
-            try {
-                DB::beginTransaction();
-                $checkPermission = DB::table('role_has_permissions')
-                    ->where('role_id', $request->role_id)
-                    ->where('permission_id', $request->permission_id)
-                    ->first();
-                $role = Role::findById($request->role_id);
-                $permission = Permission::findById($request->permission_id);
-                $res['success'] = 1;
-                if ($checkPermission) {
-                    $role->revokePermissionTo($permission);
-                    $res['message'] = 'Permission Disabled';
-                } else {
-                    $role->givePermissionTo($permission);
-                    $res['message'] = 'Permission Granted';
-                }
+            if ($checkPermission) {
+                $role->revokePermissionTo($permission);
                 DB::commit();
-                return response()->json($res);
-            } catch (\Exception $e) {
-                DB::rollBack();
-                $res['success'] = 0;
-                $res['message'] = 'Internal Server Error';
-                return response()->json($res);
+                return $this->jsonResponse(1, 'Permission Disabled');
             }
-        } else {
-            $res['success'] = 0;
-            $res['message'] = 'Validation Error';
-            return response()->json($res);
+
+            $role->givePermissionTo($permission);
+            DB::commit();
+            return $this->jsonResponse(1, 'Permission Granted');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->jsonResponse(0, 'Internal Server Error');
         }
     }
 }
