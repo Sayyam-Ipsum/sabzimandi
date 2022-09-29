@@ -83,7 +83,7 @@
                     phone: {
                         // minlength: 12,
                         // maxlength: 12,
-                        phone: true
+                        // phone: true
                     },
                 },
                 messages: {

@@ -11,16 +11,20 @@ class DashboardRepository implements DashboardInterface
 {
     public function storeProfile(Request $request): bool
     {
+        $stored = true;
         try {
             DB::beginTransaction();
             $user = $request->id ? User::find($request->id) : new User();
             $user->name = $request->name;
             $user->email = $request->email;
+            $user->phone = $request->phone;
+            $user->address = $request->address;
             $user->save();
             DB::commit();
-            return true;
         } catch (\Exception $e) {
-            return false;
+            $stored = false;
         }
+
+        return $stored;
     }
 }

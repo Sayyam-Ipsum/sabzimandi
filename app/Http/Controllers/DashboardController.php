@@ -21,8 +21,9 @@ class DashboardController extends Controller
     {
         if ($request->post()) {
             $validate = Validator::make($request->all(), [
-                'name' => 'required|unique:users,name' . ($request->id ? ",$request->id" : ''),
-                'email' => 'required|email|unique:users,email' . ($request->id ? ",$request->id" : ''),
+                'name' => 'unique:users,name' . ($request->id ? ",$request->id" : ''),
+                'email' => 'email|unique:users,email' . ($request->id ? ",$request->id" : ''),
+                'phone' => 'min:11',
             ]);
 
             if ($validate->fails()) {
@@ -30,10 +31,10 @@ class DashboardController extends Controller
             }
 
             if ($this->dashboardInterface->storeProfile($request)) {
-                return redirect('/profile')->with('success', 'Profile Updated Successfully');
+                return redirect()->back()->with('success', 'Profile Updated Successfully');
             }
 
-            return redirect('/profile')->with('error', 'Internal Server Error');
+            return redirect()->back()->with('error', 'Internal Server Error');
         }
 
         return view('dashboard.profile');

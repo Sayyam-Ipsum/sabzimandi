@@ -154,9 +154,9 @@ class SaleController extends Controller
         }
 
         if ($this->saleInterface->storePayment($request)) {
-            return redirect('/customers')->with('success', 'Payment Add Successfully');
+            return redirect()->back()->with('success', 'Payment Add Successfully');
         }
 
-        return redirect('/customers')->with('error', 'Internal Server Error');
+        return redirect()->back()->with('error', 'Internal Server Error');
     }
 }

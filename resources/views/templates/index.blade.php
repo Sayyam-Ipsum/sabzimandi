@@ -304,7 +304,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-sm-6">
-                        <h3 class="m-0 text-capitalize">@yield('title')</h3>
+                        <h4 class="m-0 text-capitalize">@yield('title')</h4>
                     </div>
                     <div class="col-sm-6 text-right">
                         @yield('page-actions')
