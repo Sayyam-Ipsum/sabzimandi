@@ -53,6 +53,7 @@ Route::group(['middleware' => 'auth'], function (){
 
         Route::prefix('customers')->group(function (){
             Route::get('/', [UserController::class, 'customers']);
+            Route::get('/{id}', [UserController::class, 'customerDetails']);
         });
     });
 
@@ -101,7 +102,6 @@ Route::group(['middleware' => 'auth'], function (){
         Route::get('/', [SaleController::class, 'list']);
         Route::get('/today', [SaleController::class, 'todaySales']);
         Route::get('/{id}', [SaleController::class, 'show']);
-        Route::get('/customer/{customerID}', [SaleController::class, 'customerSales']);
         Route::get('/payment/{customerID}', [SaleController::class, 'customerPaymentModal']);
     });
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Interfaces\RoleInterface;
+use App\Interfaces\SaleInterface;
 use App\Interfaces\UserInterface;
 use App\Models\Role;
 use Dflydev\DotAccessData\Data;
@@ -20,11 +21,13 @@ class UserController extends Controller
 
     protected UserInterface $userInterface;
     protected RoleInterface $roleInterface;
+    protected SaleInterface $saleInterface;
 
-    public function __construct(UserInterface $userInterface, RoleInterface $roleInterface)
+    public function __construct(UserInterface $userInterface, RoleInterface $roleInterface, SaleInterface $saleInterface)
     {
         $this->userInterface = $userInterface;
         $this->roleInterface = $roleInterface;
+        $this->saleInterface = $saleInterface;
     }
 
     public function index(Request $request): JsonResponse|View
@@ -88,8 +91,9 @@ class UserController extends Controller
                     if ($customers->deleted_at == null) {
                         $action .= '<button class="btn btn-sm btn-edit btn-secondary mr-1" data-id="' . $customers->id . '">
                             <i class="fa fa-pencil-alt"></i></button>';
+                        $action .= '<a class="btn btn-sm btn-view btn-primary mr-1" href="/customers/' . $customers->id . '">
+                            <i class="fa fa-eye"></i></a>';
                         $action .= '<a class="btn btn-sm btn-status btn-danger mr-1" data-id="' . $customers->id . '"><i class="fas fa-user-lock"></i></a>';
-                        $action .= '<a class="btn btn-sm btn-sales btn-info mr-1" data-id="' . $customers->id . '"><i class="fas fa-arrows-alt mr-1"></i>Sales</a>';
                         $action .= '<a class="btn btn-sm btn-payment btn-dark" data-id="' . $customers->id . '"><i class="fas fa-plus-square mr-1"></i>Payment</a>';
                     } else {
                         $action .= '<a class="btn btn-sm btn-status btn-success" data-id="' . $customers->id . '"><i class="fas fa-lock-open"></i></a>';
@@ -155,5 +159,14 @@ class UserController extends Controller
         }
 
         return $this->jsonResponse(0, 'User Not Found!');
+    }
+
+    public function customerDetails(int $id)
+    {
+        $customer = $this->userInterface->listing($id);
+        $account = $this->saleInterface->customerLastPayment($id);
+        $sales = $this->saleInterface->customerSales($id);
+
+        return view('users.customer-view', compact(['customer', 'account', 'sales']));
     }
 }

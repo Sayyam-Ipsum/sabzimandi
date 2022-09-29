@@ -134,13 +134,6 @@ class SaleController extends Controller
         return $this->modalResponse('Sale Details', 'sales.view', ['sale' => $sale]);
     }
 
-    public function customerSales(int $customerID): JsonResponse
-    {
-        $sales = $this->saleInterface->customerSales($customerID);
-
-        return $this->modalResponse('Customer Sales', 'sales.customer-sales', ['sales' => $sales]);
-    }
-
     public function customerPaymentModal($customerID): JsonResponse
     {
         $payment = $this->saleInterface->customerLastPayment($customerID);
