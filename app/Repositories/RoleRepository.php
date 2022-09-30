@@ -27,7 +27,7 @@ class RoleRepository implements RoleInterface
             ->get();
     }
 
-    public function activeRoles(): Collection
+    public function activeRoles(): Arrayable
     {
         return Role::whereNull('deleted_at')
             ->get();
