@@ -6,10 +6,11 @@ use Illuminate\Http\JsonResponse;
 
 trait ResponseTrait
 {
-    public function jsonResponse(int $success, string $message): JsonResponse
+    public function jsonResponse(int $success, string $message, array $data = null): JsonResponse
     {
         $res['success'] = $success;
         $res['message'] = $message;
+        $res['data']    = $data;
 
         return response()->json($res);
     }

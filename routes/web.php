@@ -96,6 +96,7 @@ Route::group(['middleware' => 'auth'], function (){
     Route::prefix('pos')->group(function (){
         Route::get('/', [SaleController::class, 'pos']);
         Route::post('/', [SaleController::class, 'sell']);
+        Route::get('/payment/{customerID}', [SaleController::class, 'customerPayment']);
     });
 
     Route::prefix('sales')->group(function (){

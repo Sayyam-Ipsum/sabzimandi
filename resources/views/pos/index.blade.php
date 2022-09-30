@@ -9,7 +9,7 @@
 @stop
 
 @section('page-actions')
-
+    @include('partials.add-button', ['class_name' => 'btn-add', 'text' => 'new customer'])
 @stop
 
 @section('content')
@@ -27,7 +27,7 @@
         </div>
         <div class="col-md-6">
             <div class="p-1">
-                <select class="form-control select2 mb-2" name="customer">
+                <select class="form-control select2 mb-2" name="customer" onchange="getCustomerPayment(this)">
                     <option value="">Select Customer</option>
                     @foreach(@$customers as $key => $customer)
                         <option value="{{@$customer->id}}">{{@$customer->name}}</option>
@@ -39,7 +39,7 @@
                     <thead>
                     <tr>
                         <th>Name</th>
-{{--                        <th>Unit</th>--}}
+                        {{--                        <th>Unit</th>--}}
                         <th>Qty</th>
                         <th>Total</th>
                         <th></th>
@@ -61,17 +61,50 @@
             <div class="bg-light text-right d-grid">
                 <button class="btn btn-success checkoutBtn">Checkout</button>
             </div>
+            <div class="card payment-box">
+                <div class="card-header bg-light p-0 p-2">
+                    <h5 class="m-0 p-1">Add Payment</h5>
+                </div>
+                <form action="/payment" method="post" id="payment-form" name="payment-form">
+                    @csrf
+                    <input type="hidden" name="payment_id" id="payment_id">
+                    <div class="card-body row p-0 p-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label" for="total">Total</label>
+                                <input type="number" class="form-control form-control-sm" name="total"
+                                       id="total" readonly placeholder="Total">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label" for="payable">Payable</label>
+                                <input type="number" class="form-control form-control-sm" name="payable"
+                                       id="payable" placeholder="Payable">
+                            </div>
+                        </div>
+                        <div class="col-md-12 text-right">
+                            <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-dollar-sign mr-1"></i>Pay</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 @stop
 
 @section('scripts')
     <script>
+        // Create Customer
+        $(".btn-add").click(function () {
+            open_modal('{{url('users/create?customer=1')}}');
+        });
 
         var productArray = [];
         var totalAmount = 0;
         var productCheck = true;
         $(".checkoutBtn").hide();
+        $(".payment-box").hide();
 
         $(".productRow").on('click', '.product-btn', function () {
             productCheck = true;
@@ -116,14 +149,14 @@
             }
         });
 
-        function checkTotal()
-        {
-            if(totalAmount > 0) {
+        function checkTotal() {
+            if (totalAmount > 0) {
                 $(".checkoutBtn").fadeIn();
             } else {
                 $(".checkoutBtn").fadeOut();
             }
         }
+
         function quantityChange(ctl) {
             // console.log($(ctl).parents("tr").children("td.proQty").children("input[name='qty']").val());
             // if(typeof parseInt($(ctl).parents("tr").children("td.proQty").children("input[name='qty']").val()) != 'number') {
@@ -131,16 +164,15 @@
             // }
         }
 
-        function totalChange(cwt)
-        {
+        function totalChange(cwt) {
             totals();
         }
 
-        function totals(){
+        function totals() {
             totalAmount = 0;
-            $("tr.tableRow").each(function (){
+            $("tr.tableRow").each(function () {
                 let itemValue = $(this).find("td.proTotal").find("input[name='total']").val();
-                if(parseFloat(itemValue) > 0) {
+                if (parseFloat(itemValue) > 0) {
                     totalAmount = totalAmount + parseFloat(itemValue);
                 }
             });
@@ -151,7 +183,7 @@
         function deleteProduct(ctl) {
             $(ctl).parents("tr").remove();
             totals();
-            if($("tr.tableRow").length < 1) {
+            if ($("tr.tableRow").length < 1) {
                 $("#noProductRow").show();
             }
         }
@@ -212,6 +244,51 @@
                     });
                 }
 
+            }
+        });
+
+        function getCustomerPayment(cwt) {
+            var customer_id = cwt.options[cwt.selectedIndex].value;
+            $.ajax({
+                url: "{{url('pos/payment')}}/" + customer_id,
+                type: "GET",
+                dataType: "json",
+                cache: false,
+                success: function (res) {
+                    if (res.success == 1) {
+                        if (res.data.payment) {
+                            $("#payment_id").val(res.data.payment.id);
+                            $("#total").val(res.data.payment.remain == 0 ? res.data.payment.remain : res.data.payment.remain);
+                        } else {
+                            $("#total").val(0);
+                        }
+                        $(".payment-box").fadeIn();
+                    }
+                }
+            });
+        }
+
+        $("#payment-form").validate({
+            rules: {
+                total: {
+                    required: true,
+                },
+                payable: {
+                    required: true,
+                    payableGreaterThanZero: true,
+                    payableValueLessThanTotal: true
+                },
+            },
+            messages: {
+                total: {
+                    required: "Total is Required*",
+                },
+                payable: {
+                    required: "Payable is Required*",
+                },
+            },
+            submitHandler: function (form) {
+                return true;
             }
         });
 

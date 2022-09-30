@@ -138,18 +138,15 @@ class UserController extends Controller
         ]);
 
         if ($validate->fails()) {
-            return redirect('/users')->withErrors($validate);
+            return redirect()->back()->withErrors($validate);
         }
 
         if ($this->userInterface->store($request, $id)) {
-            if ($request->input('role_id') == customerRoleId()) {
-                return redirect('/customers')->with('success', 'Operation Successful');
-            }
 
-            return redirect('/users')->with('success', 'Operation Successful');
+            return redirect()->back()->with('success', 'Operation Successful');
         }
 
-        return redirect('/users')->with('error', 'Internal Server Error');
+        return redirect()->back()->with('error', 'Internal Server Error');
     }
 
     public function status(int $id): JsonResponse

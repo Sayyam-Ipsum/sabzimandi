@@ -8,6 +8,7 @@ use App\Interfaces\UserInterface;
 use App\Models\Payment;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
@@ -134,14 +135,21 @@ class SaleController extends Controller
         return $this->modalResponse('Sale Details', 'sales.view', ['sale' => $sale]);
     }
 
-    public function customerPaymentModal($customerID): JsonResponse
+    public function customerPaymentModal(int $customerID): JsonResponse
     {
         $payment = $this->saleInterface->customerLastPayment($customerID);
 
         return $this->modalResponse('Add Payment', 'users.payment', ['payment' => $payment]);
     }
 
-    public function storePayment(Request $request)
+    public function customerPayment(int $customerID)
+    {
+        $payment = $this->saleInterface->customerLastPayment($customerID);
+
+        return $this->jsonResponse(1, 'Customer Payment',  ['payment' => $payment]);
+    }
+
+    public function storePayment(Request $request): RedirectResponse
     {
         $validate = Validator::make($request->all(), [
             'payment_id' => 'required',
@@ -150,7 +158,7 @@ class SaleController extends Controller
         ]);
 
         if ($validate->fails()) {
-            return redirect('/customers')->withErrors($validate);
+            return redirect()->back()->withErrors($validate);
         }
 
         if ($this->saleInterface->storePayment($request)) {
