@@ -74,10 +74,6 @@ class AuthRepository implements AuthInterface
 
     public function resetPasswordView($token): View|RedirectResponse
     {
-        if (!$token) {
-            return redirect('/forgot')->with('error', 'Reset Password Token not found');
-        }
-
         $resetToken = DB::table('password_resets')
             ->where('token', $token)
             ->get()

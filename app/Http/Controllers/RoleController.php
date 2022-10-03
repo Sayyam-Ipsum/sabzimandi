@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Interfaces\RoleInterface;
-use App\Models\Role;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;

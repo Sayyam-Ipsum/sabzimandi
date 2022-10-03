@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Interfaces\RoleInterface;
 use App\Interfaces\SaleInterface;
 use App\Interfaces\UserInterface;
-use App\Models\Role;
-use Dflydev\DotAccessData\Data;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;

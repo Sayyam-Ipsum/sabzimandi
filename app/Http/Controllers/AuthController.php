@@ -36,6 +36,10 @@ class AuthController extends Controller
 
     public function resetPasswordView($token)
     {
+        if (!$token) {
+            return redirect('/forgot')->with('error', 'Reset Password Token not found');
+        }
+
         return $this->authInterface->resetPasswordView($token);
     }
 
@@ -63,7 +67,7 @@ class AuthController extends Controller
             return redirect('/dashboard');
         }
 
-        return redirect('/login')->with('error', 'Invalid Credentials');
+        return redirect('/login')->with('error', 'Invalid Credentials')->withInput();
     }
 
     public function forgotPassword(Request $request): RedirectResponse

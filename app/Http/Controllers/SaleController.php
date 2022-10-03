@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Interfaces\ProductInterface;
 use App\Interfaces\SaleInterface;
 use App\Interfaces\UserInterface;
-use App\Models\Payment;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -142,7 +141,7 @@ class SaleController extends Controller
         return $this->modalResponse('Add Payment', 'users.payment', ['payment' => $payment]);
     }
 
-    public function customerPayment(int $customerID)
+    public function customerPayment(int $customerID): JsonResponse
     {
         $payment = $this->saleInterface->customerLastPayment($customerID);
 
