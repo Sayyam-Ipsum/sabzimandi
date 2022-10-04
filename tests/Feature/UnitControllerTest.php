@@ -43,7 +43,8 @@ class UnitControllerTest extends TestCase
 
     public function test_edit_unit_modal()
     {
-        $response = $this->get('/units/edit/1');
+        $unit = Unit::get()->last();
+        $response = $this->get('/units/edit/'.$unit->id);
 
         $response->assertStatus(200);
     }
@@ -60,6 +61,16 @@ class UnitControllerTest extends TestCase
     public function test_store_unit()
     {
         $str = Str::random(6);
+        $response = $this->post('/units/store', [
+            'name' => $str,
+        ]);
+
+        $response->assertStatus(302);
+    }
+
+    public function test_store_unit_failed()
+    {
+        $str = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries";
         $response = $this->post('/units/store', [
             'name' => $str,
         ]);

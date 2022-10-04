@@ -75,18 +75,6 @@ class SaleControllerTest extends TestCase
         $response->assertStatus(302);
     }
 
-    public function test_store_payment_with_remaining_amount_zero()
-    {
-        $payment = Payment::where('remain', 0)->get()->last();
-        $response = $this->post('/payment', [
-            'payment_id' => $payment->id,
-            'total' => $payment->total,
-            'payable' => 200
-        ]);
-
-        $response->assertStatus(302);
-    }
-
     public function test_store_payment_validation_failed()
     {
         $payment = Payment::get()->last();
@@ -149,5 +137,17 @@ class SaleControllerTest extends TestCase
         ]);
 
         $response->assertStatus(200);
+    }
+
+    public function test_store_payment_with_remaining_amount_zero()
+    {
+        $payment = Payment::where('remain', '=', 0)->first();
+        $response = $this->post('/payment', [
+            'payment_id' => $payment->id,
+            'total' => $payment->total,
+            'payable' => 200
+        ]);
+
+        $response->assertStatus(302);
     }
 }

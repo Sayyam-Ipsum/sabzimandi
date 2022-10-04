@@ -30,7 +30,7 @@ class RoleControllerTest extends TestCase
 
     public function test_roles_listing()
     {
-        $response = $this->get('/roles', ['HTTP_X-Requested-With' => 'XMLHttpRequest'] );
+        $response = $this->get('/roles', ['HTTP_X-Requested-With' => 'XMLHttpRequest']);
 
         $response->assertStatus(200);
     }
@@ -44,8 +44,9 @@ class RoleControllerTest extends TestCase
 
     public function test_edit_role_modal()
     {
-        $role = Role::get()->last();
-        $response = $this->get('/roles/edit/'.$role->id);
+        $role = Role::get()
+            ->last();
+        $response = $this->get('/roles/edit/' . $role->id);
 
         $response->assertStatus(200);
     }
@@ -54,6 +55,16 @@ class RoleControllerTest extends TestCase
     {
         $response = $this->post('/roles/store', [
             'name' => '',
+        ]);
+
+        $response->assertStatus(302);
+    }
+
+    public function test_store_role_failed()
+    {
+        $str = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries";
+        $response = $this->post('/roles/store', [
+            'name' => $str,
         ]);
 
         $response->assertStatus(302);
@@ -71,9 +82,10 @@ class RoleControllerTest extends TestCase
 
     public function test_update_role()
     {
-        $role = Role::get()->last();
+        $role = Role::get()
+            ->last();
         $str = Str::random(6);
-        $response = $this->post('/roles/store/'.$role->id, [
+        $response = $this->post('/roles/store/' . $role->id, [
             'name' => $str,
         ]);
 
@@ -82,8 +94,9 @@ class RoleControllerTest extends TestCase
 
     public function test_change_role_status()
     {
-        $role = Role::get()->last();
-        $response = $this->get('/roles/status/'.$role->id);
+        $role = Role::get()
+            ->last();
+        $response = $this->get('/roles/status/' . $role->id);
 
         $response->assertStatus(200);
     }
@@ -97,16 +110,19 @@ class RoleControllerTest extends TestCase
 
     public function test_role_permissions()
     {
-        $role = Role::get()->last();
-        $response = $this->get('/roles/permissions/'.$role->id);
+        $role = Role::get()
+            ->last();
+        $response = $this->get('/roles/permissions/' . $role->id);
 
         $response->assertStatus(200);
     }
 
     public function test_manage_role_permission()
     {
-        $role = Role::get()->last();
-        $permission = Permission::get()->last();
+        $role = Role::get()
+            ->last();
+        $permission = Permission::get()
+            ->last();
 
         $response = $this->post('/roles/permissions', [
             'role_id' => $role->id,
