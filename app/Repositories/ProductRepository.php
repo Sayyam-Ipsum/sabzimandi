@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class ProductRepository implements ProductInterface
 {
-    public function listing(int $id = null): Arrayable
+    public function listing(int $id = null): Arrayable|Collection
     {
         if ($id) {
             return Product::find($id);

@@ -17,7 +17,7 @@ class RoleRepository implements RoleInterface
 {
     use ResponseTrait;
 
-    public function listing(int $id = null): Arrayable
+    public function listing(int $id = null): Arrayable|Collection
     {
         if ($id) {
             return Role::find($id);

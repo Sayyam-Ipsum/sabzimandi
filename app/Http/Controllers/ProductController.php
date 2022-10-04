@@ -70,6 +70,7 @@ class ProductController extends Controller
     {
         $validate = Validator::make($request->all(), [
             'name' => 'required|unique:roles,name' . ($id ? ",$id" : ''),
+            'unit' => 'required'
         ]);
 
         if ($validate->fails()) {

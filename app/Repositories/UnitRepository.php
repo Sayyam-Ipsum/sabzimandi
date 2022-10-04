@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Interfaces\UnitInterface;
 use App\Models\Unit;
+use FontLib\TrueType\Collection;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -11,7 +12,7 @@ use Illuminate\Support\Str;
 
 class UnitRepository implements UnitInterface
 {
-    public function listing(int $id = null): Arrayable
+    public function listing(int $id = null): Arrayable|Collection
     {
         if ($id) {
             return Unit::find($id);

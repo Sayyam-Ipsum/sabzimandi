@@ -91,7 +91,7 @@ class UserControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_chagne_user_status_user_not_found()
+    public function test_change_user_status_user_not_found()
     {
         $response = $this->get('/users/status/0');
 
