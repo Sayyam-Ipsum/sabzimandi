@@ -13,13 +13,13 @@
         <div class="card-body p-0 p-2">
             <form action="{{url('profile')}}" method="post" name="profile-form" id="profile-form">
                 @csrf
-                <input type="hidden" name="id" value="{{$customer->id}}">
-                <input type="hidden" name="role" value="{{$customer->role_id_fk}}">
+                <input type="hidden" name="id" value="{{@$customer->id}}">
+                <input type="hidden" name="role" value="{{@$customer->role_id_fk}}">
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
                             <label class="form-label" for="name">Name</label>
-                            <input type="text" class="form-control" placeholder="John Doe" value="{{$customer->name}}"
+                            <input type="text" class="form-control" placeholder="John Doe" value="{{@$customer->name}}"
                                    name="name" id="name">
                         </div>
                     </div>
@@ -27,7 +27,7 @@
                         <div class="form-group">
                             <label class="form-label" for="email">Email</label>
                             <input type="email" class="form-control" placeholder="test@gmail.com"
-                                   value="{{$customer->email}}"
+                                   value="{{@$customer->email}}"
                                    name="email" id="email">
                         </div>
                     </div>
@@ -35,7 +35,7 @@
                         <div class="form-group">
                             <label class="form-label" for="phone">Phone</label>
                             <input type="text" class="form-control" placeholder="03053609490"
-                                   value="{{$customer->phone}}"
+                                   value="{{@$customer->phone}}"
                                    name="phone" id="phone">
                         </div>
                     </div>
@@ -43,7 +43,7 @@
                         <div class="form-group">
                             <label class="form-label" for="address">Address</label>
                             <input type="text" class="form-control" placeholder="sadiqabad"
-                                   value="{{$customer->address}}"
+                                   value="{{@$customer->address}}"
                                    name="address" id="address">
                         </div>
                     </div>
@@ -109,7 +109,7 @@
                     <h5 class="m-0 p-1">Sales</h5>
                 </div>
                 <div class="card-body p-0 p-1">
-                    @if(sizeof($sales) > 0)
+                    @if(sizeof(@$sales) > 0)
                         <div class="accordian">
                             @foreach(@$sales as $key => $sale)
                                 <div class="border-1 m-1">
@@ -174,7 +174,7 @@
                 <div class="card-header bg-light p-0 p-2">
                     <div class="d-flex justify-content-between align-items-center">
                         <h5 class="m-0 p-1">Payments</h5>
-                        <button class="btn btn-sm btn-success btn-payment" data-id="{{$customer->id}}"><i
+                        <button class="btn btn-sm btn-success btn-payment" data-id="{{@$customer->id}}"><i
                                 class="far fa-plus-square mr-1"></i>Payment
                         </button>
                     </div>
@@ -192,8 +192,8 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @if(is_iterable($customer->payments))
-                                @foreach($customer->payments as $key => $payment)
+                            @if(is_iterable(@$customer->payments))
+                                @foreach(@$customer->payments as $key => $payment)
                                     <tr>
                                         <td>{{$key+1}}</td>
                                         <td>{{showDateTime($payment->created_at)}}</td>

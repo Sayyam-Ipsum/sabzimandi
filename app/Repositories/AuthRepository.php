@@ -29,8 +29,8 @@ class AuthRepository implements AuthInterface
 
     public function forgotPassword(Request $request): bool|RedirectResponse
     {
-        $user = User::where('email', $request->email)
-            ->first();
+        $user = User::where('email', $request->email)->first();
+
         if ($user) {
             $token = Str::random(64);
             $resetPassword = DB::table('password_resets')
