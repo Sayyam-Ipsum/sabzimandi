@@ -19,7 +19,9 @@ use App\Http\Controllers\UnitController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('/sentry', function () {
+    throw new Exception('My first Sentry error!');
+});
 //-------------------------------------------------
 //--------------Authentication Routes -------------
 //-------------------------------------------------

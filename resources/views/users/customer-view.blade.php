@@ -7,7 +7,6 @@
 @section('title')
     customer
 @stop
-
 @section('content')
     <div class="card mt-3">
         <div class="card-body p-0 p-2">

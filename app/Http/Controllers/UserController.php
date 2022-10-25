@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
+use Spatie\Browsershot\Browsershot;
 use Yajra\DataTables\DataTables;
 use App\Traits\ResponseTrait;
 
